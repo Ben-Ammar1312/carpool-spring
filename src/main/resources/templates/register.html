@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inscription</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 500px;">
+        <h1 class="text-center">Inscription</h1>
+
+        <!-- Display Flash Messages -->
+        <div th:if="${error}" class="alert alert-danger">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <p th:text="${success}"></p>
+        </div>
+
+        <form th:action="@{/register}" th:object="${user}" method="post" enctype="multipart/form-data" onsubmit="return validatePassword();">
+
+            <div class="form-group mb-3">
+                <input type="text" th:field="*{nom}" class="form-control" placeholder="Nom">
+                <div th:if="${#fields.hasErrors('nom')}" class="text-danger" th:errors="*{nom}">Nom error</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="text" th:field="*{prenom}" class="form-control" placeholder="Prénom">
+                <div th:if="${#fields.hasErrors('prenom')}" class="text-danger" th:errors="*{prenom}">Prénom error</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="text" th:field="*{telephone}" class="form-control" placeholder="Téléphone">
+                <div th:if="${#fields.hasErrors('telephone')}" class="text-danger" th:errors="*{telephone}">Téléphone error</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="email" th:field="*{email}" class="form-control" placeholder="Email">
+                <div th:if="${#fields.hasErrors('email')}" class="text-danger" th:errors="*{email}">Email error</div>
+            </div>
+
+            <div class="form-group mb-3">
+
+
+                    <select name="role" th:field="*{genre}"  class="form-select">
+                        <option th:each="genre : ${T(gle.carpoolspring.enums.Genre).values()}"
+                                th:value="${genre}"
+                                th:text="${genre}"></option>
+                    </select>
+
+            </div>
+
+            <div class="form-group mb-3">
+                <input id="password" type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe">
+                <div th:if="${#fields.hasErrors('password')}" class="text-danger" th:errors="*{password}">Mot de passe error</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input id="confirmPassword" type="password" th:field="*{confirmPassword}" class="form-control" placeholder="Confirmer le mot de passe">
+                <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger" th:errors="*{confirmPassword}">Confirmer le mot de passe error</div>
+                <div id="passwordError" class="text-danger" style="display: none;">Les mots de passe ne correspondent pas.</div>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="file" th:field="*{photoFile}" class="form-control-file">
+                <div th:if="${#fields.hasErrors('photoFile')}" class="text-danger" th:errors="*{photoFile}">ProfilePic error</div>
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox" th:field="*{agreeTerms}" class="form-check-input">
+                <label for="agreeTerms" class="form-check-label">Accepter les termes</label>
+                <div th:if="${#fields.hasErrors('agreeTerms')}" class="text-danger" th:errors="*{agreeTerms}">AgreeTerms error</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function validatePassword() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorDiv = document.getElementById('passwordError');
+
+        if (password !== confirmPassword) {
+            errorDiv.style.display = 'block';
+            return false;
+        }
+        errorDiv.style.display = 'none';
+        return true;
+    }
+</script>
+</body>
+</html>

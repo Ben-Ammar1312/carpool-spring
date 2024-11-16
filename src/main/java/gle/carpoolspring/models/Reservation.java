@@ -20,15 +20,15 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "id_passager", nullable = false)
-    private gle.carpoolspring.models.Passager passagers;
+    private gle.carpoolspring.models.Passager passager;
 
 
     @ManyToOne
     @JoinColumn(name = "id_annonce", nullable = false)
-    private gle.carpoolspring.models.Annonce annonces;
+    private gle.carpoolspring.models.Annonce annonce;
 
     @OneToOne
     @JoinColumn(name = "id_paiement")
-    private gle.carpoolspring.models.Paiement paiements;
+    private gle.carpoolspring.models.Paiement paiement;
 
 }

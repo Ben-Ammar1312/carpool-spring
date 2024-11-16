@@ -19,4 +19,6 @@ public class Conducteur extends User{
 
     @OneToMany(mappedBy = "conducteur")
     private List<gle.carpoolspring.models.Avis> avis;
+
+
 }

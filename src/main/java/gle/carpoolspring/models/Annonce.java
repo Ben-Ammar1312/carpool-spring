@@ -26,7 +26,7 @@ public class Annonce {
     private Conducteur conducteur;
 
 
-    @OneToMany(mappedBy = "annonces")
+    @OneToMany(mappedBy = "annonce")
     private List<Reservation> reservations;
 
 
