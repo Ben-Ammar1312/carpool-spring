@@ -21,6 +21,6 @@ public class Avis {
     // Many avis can be given by one passager
     @ManyToOne
     @JoinColumn(name = "id_passager", nullable = false)
-    private Passager passagers;
+    private Passager passager;
 
 }

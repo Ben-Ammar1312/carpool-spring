@@ -9,10 +9,12 @@ public class Passager extends User {
 
 
 
-    @OneToMany(mappedBy = "passagers")
+    @OneToMany(mappedBy = "passager")
     private List<gle.carpoolspring.models.Avis> avis;
 
 
-    @OneToMany(mappedBy = "passagers")
+    @OneToMany(mappedBy = "passager")
     private List<Reservation> reservations;
+
+
 }

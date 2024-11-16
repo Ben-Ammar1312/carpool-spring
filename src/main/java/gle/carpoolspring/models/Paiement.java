@@ -20,7 +20,7 @@ public class Paiement {
     @Enumerated(EnumType.STRING)
     gle.carpoolspring.models.Mode mode;
 
-    @OneToOne(mappedBy = "paiements")
-    private Reservation reservations;
+    @OneToOne(mappedBy = "paiement")
+    private Reservation reservation;
 
 }
