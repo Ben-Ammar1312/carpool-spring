@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ride History</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <div>Carpool</div>
+  <nav>
+    <a href="#">Sign In</a>
+    <a href="#">Sign Up</a>
+    <a href="#">Profile</a>
+  </nav>
+</header>
+<section class="hero ride-history">
+  <h1>Your Ride History</h1>
+  <div class="ride-history-list">
+
+    <div th:each="ride : ${rideHistory}" class="ride">
+      <p><strong>From:</strong> <span th:text="${ride.lieuDepart}"></span></p>
+      <p><strong>To:</strong> <span th:text="${ride.lieuArrivee}"></span></p>
+      <p><strong>Date:</strong> <span th:text="${ride.dateDepart}"></span></p>
+      <p><strong>Status:</strong> Completed</p>
+      <p><strong>Price Paid:</strong> <span th:text="${ride.prix}"></span> $</p>
+    </div>
+  </div>
+</section>
+<footer>
+  <p>Contact Us | Privacy Policy | Terms of Service</p>
+  <a href="#">Facebook</a>
+  <a href="#">Twitter</a>
+  <a href="#">Instagram</a>
+</footer>
+</body>
+</html>
