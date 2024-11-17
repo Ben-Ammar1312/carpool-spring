@@ -1,0 +1,744 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('road.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for readability */
+    z-index: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgba(43, 43, 43, 0.8); /* Make the menu background more visible */
+    z-index: 1;
+}
+
+header nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #ffffff; /* Ensure menu text is visible */
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80vh;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    z-index: 1; /* Ensures content is above overlay */
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.hero .search-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.search-bar input, .search-bar button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    outline: none;
+}
+
+.search-bar input {
+    width: 220px;
+}
+
+.search-bar button {
+    background-color: #0072ff;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #005bb5;
+}
+
+footer {
+    background-color: #2b2b2b;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute; /* Adjust footer positioning */
+    bottom: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+footer p {
+    color: #fff;
+}
+
+footer a {
+    color: #ffffff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+footer a:hover {
+    color: #bbbbbb;
+}
+/* Style for the Sign-In Form */
+.sign-in-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.sign-in-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+.sign-in-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.sign-in-form button:hover {
+    background-color: #005bb5;
+}
+.hero p {
+    color: #fff;
+    margin-top: 15px;
+    z-index: 1;
+}
+.hero a {
+    color: #0072ff;
+    text-decoration: none;
+}
+.hero a:hover {
+    color: #005bb5;
+}
+/* Style for the Sign-Up Form */
+.sign-up-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.sign-up-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+.sign-up-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.sign-up-form button:hover {
+    background-color: #005bb5;
+}
+.hero p {
+    color: #fff;
+    margin-top: 15px;
+    z-index: 1;
+}
+.hero a {
+    color: #0072ff;
+    text-decoration: none;
+}
+.hero a:hover {
+    color: #005bb5;
+}
+/* Style for the Profile Form */
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.profile-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+.profile-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.profile-form button:hover {
+    background-color: #005bb5;
+}
+/* Style for the Delete Account Button */
+.delete-account {
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #ff0000;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.delete-account:hover {
+    background-color: #cc0000;
+}
+.hero p {
+    color: #fff;
+    margin-top: 15px;
+    z-index: 1;
+}
+.hero a {
+    color: #0072ff;
+    text-decoration: none;
+}
+.hero a:hover {
+    color: #005bb5;
+}
+/* Style for the Ride Posting Form */
+.ride-posting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.ride-posting-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+.ride-posting-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.ride-posting-form button:hover {
+    background-color: #005bb5;
+}
+.hero p {
+    color: #fff;
+    margin-top: 15px;
+    z-index: 1;
+}
+.hero a {
+    color: #0072ff;
+    text-decoration: none;
+}
+.hero a:hover {
+    color: #005bb5;
+}
+/* Style for the Search Results Page */
+.search-results {
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+.ride-list {
+    width: 40%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ride-list h2 {
+    margin-bottom: 20px;
+}
+
+.ride {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ride p {
+    margin: 5px 0;
+}
+
+.ride button {
+    padding: 10px;
+    background-color: #0072ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ride button:hover {
+    background-color: #005bb5;
+}
+
+.map-view {
+    width: 60%;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* Style for Ride Details Section */
+.ride-details-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.ride-details-content p {
+    margin: 10px 0;
+}
+.ride-details-content button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+.ride-details-content button:hover {
+    background-color: #005bb5;
+}
+
+/* Style for Booking Confirmation Section */
+.booking-details {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.booking-details p {
+    margin: 10px 0;
+}
+.booking-details button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+.booking-details button:hover {
+    background-color: #005bb5;
+}
+/* Style for Cancel Button */
+.booking-details .cancel {
+    background-color: #ff0000;
+    margin-left: 10px;
+}
+.booking-details .cancel:hover {
+    background-color: #cc0000;
+}
+
+/* Style for Notifications Section */
+.notification-list {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.notification {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification p {
+    margin: 5px 0;
+}
+
+.notification strong {
+    color: #0072ff;
+}
+
+/* Style for Ride History Section */
+.ride-history-list {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.ride {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ride p {
+    margin: 5px 0;
+}
+
+.ride strong {
+    color: #0072ff;
+}
+
+/* Style for Admin Dashboard Section */
+.admin-dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.admin-section {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.admin-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 240px;
+    text-align: left;
+}
+
+.admin-card h2 {
+    color: #0072ff;
+    margin-bottom: 10px;
+}
+
+.admin-card p {
+    margin-bottom: 15px;
+}
+
+.admin-card button {
+    padding: 10px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.admin-card button:hover {
+    background-color: #005bb5;
+}
+
+/* Style for Chat Interface Section */
+.chat-interface {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.chat-window {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    justify-content: space-between;
+}
+
+.message-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.message p {
+    margin: 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.sender p {
+    background-color: #0072ff;
+    color: white;
+    text-align: right;
+}
+
+.receiver p {
+    background-color: #f1f1f1;
+    color: #333;
+    text-align: left;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.chat-input button {
+    padding: 10px;
+    background-color: #0072ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.chat-input button:hover {
+    background-color: #005bb5;
+}
+
+/* Style for Payment Gateway Section */
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.payment-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+.payment-row {
+    display: flex;
+    gap: 15px;
+}
+
+.payment-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.payment-form button:hover {
+    background-color: #005bb5;
+}
+
+/* Style for Rating and Review Section */
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.rating {
+    display: flex;
+    flex-direction: column;
+}
+
+.rating label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.review-form select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+.review-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    resize: none;
+}
+
+.review-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.review-form button:hover {
+    background-color: #005bb5;
+}
+
+/* Style for Help and Support Section */
+.support-section {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+}
+
+.faq {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-item h3 {
+    color: #0072ff;
+    margin-bottom: 10px;
+}
+
+.faq-item p {
+    margin: 0;
+}
+
+.contact-support {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.support-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.support-form input, .support-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+.support-form button {
+    padding: 12px;
+    background-color: #0072ff;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.support-form button:hover {
+    background-color: #005bb5;
+}

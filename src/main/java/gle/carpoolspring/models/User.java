@@ -8,22 +8,22 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id_user;
-    String nom;
-    String prenom;
-    String num;
-    String email;
-    String password;
-    String adresse ;
-    String photo;
-    String cin;
-    Float note;
+    private int id_user;
+    private String nom;
+    private String prenom;
+    private String num;
+    private String email;
+    private String password;
+    private String adresse ;
+    private String photo;
+    private String cin;
+    private Float note;
 
 
     @OneToMany(mappedBy = "sender")
