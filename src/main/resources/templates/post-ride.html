@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title >Post a Ride</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<h1>Post a Ride</h1>
+
+<div th:if="${param.success}" style="color: green;">
+    Ride posted successfully!
+</div>
+
+
+<form class="ride-posting-form" th:action="@{/annonces/addAnnonce}" method="post">
+    <input type="text" placeholder="Departure Location" name="lieuDepart" required />
+    <input type="text" placeholder="Destination" name="lieuArrivee" required />
+    <input type="date" name="dateDepart" required />
+    <input type="time" name="heureDepart" required />
+    <input type="number" placeholder="Available Seats" name="nbrPlaces" min="1" required />
+    <input type="number" placeholder="Price per Passenger" name="prix" min="0" step="5" required />
+    <button type="submit">Post Ride</button>
+</form>
+</body>
+</html>
