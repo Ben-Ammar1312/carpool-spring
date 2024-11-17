@@ -16,6 +16,8 @@ import gle.carpoolspring.service.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 

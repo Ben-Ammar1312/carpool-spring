@@ -43,6 +43,7 @@ header nav a {
 }
 
 .hero {
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,6 +53,7 @@ header nav a {
     color: #fff;
     position: relative;
     z-index: 1; /* Ensures content is above overlay */
+    padding: 20px;
 }
 
 .hero h1 {
@@ -96,10 +98,11 @@ footer {
     padding: 20px;
     text-align: center;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    position: absolute; /* Adjust footer positioning */
+    /* Adjust footer positioning */
     bottom: 0;
     width: 100%;
     z-index: 1;
+    position: relative;
 }
 
 footer p {
@@ -202,23 +205,24 @@ footer a:hover {
 .profile-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
     z-index: 1;
+    margin-bottom: 10px;
 }
 .profile-form input {
     padding: 12px;
     border-radius: 8px;
     border: none;
-    font-size: 16px;
+    font-size: 12px;
 }
 .profile-form button {
-    padding: 12px;
+    padding: 10px;
     background-color: #0072ff;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -229,15 +233,16 @@ footer a:hover {
 }
 /* Style for the Delete Account Button */
 .delete-account {
-    padding: 12px;
-    margin-top: 15px;
+    padding: 8px;
+    margin-top: 10px;
     background-color: #ff0000;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
 }
 .delete-account:hover {
     background-color: #cc0000;

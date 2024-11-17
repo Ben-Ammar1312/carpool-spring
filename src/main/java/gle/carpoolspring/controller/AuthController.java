@@ -118,6 +118,8 @@ public class AuthController {
         return "dashboard";
     }
 
+
+
     @GetMapping("/verify")
     public String verifyEmail(@RequestParam("token") String token, Model model) {
         boolean isVerified = verificationService.verifyEmailToken(token);

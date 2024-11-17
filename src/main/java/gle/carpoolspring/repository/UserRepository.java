@@ -11,4 +11,6 @@ import gle.carpoolspring.models.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     Optional<User> findByTelephone(String telephone);
+
+    boolean existsByEmail(String email);
 }

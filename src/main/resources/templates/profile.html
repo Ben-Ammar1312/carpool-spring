@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooling Profile</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script>
+        // Function to handle the photo file selection and update the text field
+        function updatePhotoName() {
+            const fileInput = document.querySelector('input[name="photoFile"]');
+            const photoNameField = document.querySelector('input[name="photoName"]');
+            const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
+            photoNameField.value = fileName;  // Update the photo name text field
+        }
+
+        // Function to validate password and confirm password match only on submit
+        function validatePasswords(event) {
+            const password = document.querySelector('input[name="password"]');
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]');
+            if (password.value !== confirmPassword.value) {
+                // Show alert when passwords don't match
+                alert("Passwords do not match. Please try again.");
+                // Clear both fields
+                password.value = '';
+                confirmPassword.value = '';
+                event.preventDefault();  // Prevent form submission
+            }
+        }
+
+        // Function to confirm account deletion
+        function confirmDeletion() {
+            return confirm("Are you sure you want to delete your account?");
+        }
+    </script>
+</head>
+<body>
+<div class="content-wrapper">
+    <header>
+        <a>
+            <div>Carpool</div>
+        </a>
+
+        <nav>
+            <a href="#" th:href="@{/logout}">Logout</a>
+            <a href="#" th:href="@{/profile}">Profile</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <h3>Your Profile</h3>
+        <form class="profile-form" method="POST" action="/profile/update" enctype="multipart/form-data" onsubmit="validatePasswords(event)">
+            <!-- Last Name -->
+            <input type="text" id="nom" name="nom" placeholder="Last Name" th:value="${user.nom}" required>
+
+            <!-- First Name -->
+            <input type="text" id="prenom" name="prenom" placeholder="First Name" th:value="${user.prenom}" required>
+
+            <!-- Phone Number -->
+            <input type="text" id="telephone" name="telephone" placeholder="Phone Number" th:value="${user.telephone}" required>
+
+            <!-- Address -->
+            <input type="text" id="adresse" name="adresse" placeholder="Address" th:value="${user.adresse}" required>
+
+            <!-- Email (readonly) -->
+            <input type="email" id="email" name="email" placeholder="Email Address" th:value="${user.email}" readonly>
+            <input type="text" id="cin" name="cin" placeholder="Email Address" th:value="${user.cin}" readonly>
+
+            <!-- Password -->
+            <input type="password" id="password" name="password" placeholder="Password">
+
+            <!-- Confirm Password -->
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
+
+            <!-- Profile Photo -->
+            <!--<img th:src="@{/uploads/{photo}(photo=${user.photo})}" alt="Profile Photo" style="width: 100px; height: auto;">-->
+
+            <!-- File input for selecting an image -->
+            <input type="file" name="photoFile" accept="image/*" onchange="updatePhotoName()">
+
+            <!-- Text field to show the selected photo's name -->
+            <input type="text" name="photoName" placeholder="Enter Photo Name" th:value="${user.photo}" readonly>
+
+            <button type="submit">Update Profile</button>
+        </form>
+
+        <!-- Form to delete account -->
+        <form method="POST" action="/profile/delete" onsubmit="return confirmDeletion();">
+            <button type="submit" class="delete-account">Delete Account</button>
+        </form>
+
+    </section>
+</div>
+<footer>
+    <p>Contact Us | Privacy Policy | Terms of Service</p>
+</footer>
+</body>
+</html>
