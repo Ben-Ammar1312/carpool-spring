@@ -752,3 +752,180 @@ footer a:hover {
     background-color: #005bb5;
 }
 
+/* Rounded corners for the table */
+.results-table {
+    width: 100%;
+    margin-top: 20px;
+    border: 2px solid white;
+    border-radius: 10px; /* Round the corners of the table */
+    overflow: hidden; /* Ensures that the corners are rounded properly */
+    border-spacing: 0; /* Ensures no space between table cells */
+}
+
+/* Style for table headers and data cells */
+.results-table th, .results-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+    color: white;
+    border: 1px solid white; /* Add borders to table cells */
+}
+
+/* Apply rounded corners to the table rows */
+.results-table thead tr:first-child th:first-child {
+    border-top-left-radius: 10px; /* Round top-left corner */
+}
+
+.results-table thead tr:first-child th:last-child {
+    border-top-right-radius: 10px; /* Round top-right corner */
+}
+
+.results-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 10px; /* Round bottom-left corner */
+}
+
+.results-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 10px; /* Round bottom-right corner */
+}
+
+/* Hover effect for table rows */
+.results-table tbody tr:hover {
+    background-color: #333;
+}
+
+
+
+
+
+
+
+/* Apply some global styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+#content-wrapper {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+}
+
+#logo-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#navigation a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+#navigation a:hover {
+    text-decoration: underline;
+}
+
+/* Hero section */
+#hero-section {
+    padding: 20px;
+    text-align: center;
+}
+
+#search-heading {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#label-lieuDepart,
+#label-lieuArrivee,
+#label-dateDepart,
+#label-nbrPlaces,
+#label-maxPrice {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+/* Input styles */
+.input-field {
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.input-field:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+}
+
+/* Button styles */
+#submit-button {
+    padding: 12px 20px;
+    background-color: #0056b3;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submit-button:hover {
+    background-color: #00408b;
+}
+
+/* Footer */
+#footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+#footer-text {
+    font-size: 14px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #search-form {
+        padding: 10px;
+    }
+
+    #search-heading {
+        font-size: 22px;
+    }
+}
+

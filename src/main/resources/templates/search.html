@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Rides</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="content-wrapper" id="content-wrapper">
+  <header id="header">
+    <a id="logo">
+      <div id="logo-text">Carpool</div>
+    </a>
+    <nav id="navigation">
+      <a href="#" th:href="@{/logout}" id="logout-link">Logout</a>
+      <a href="#" th:href="@{/profile}" id="profile-link">Profile</a>
+    </nav>
+  </header>
+  <section class="hero" id="hero-section">
+    <h3 id="search-heading">Find a Ride</h3>
+    <form class="search-form" method="GET" action="/search/results" id="search-form">
+      <!-- Departure Location -->
+      <label for="lieuDepart" id="label-lieuDepart">Departure Location:</label>
+      <input type="text" id="lieuDepart" name="lieuDepart" placeholder="Enter departure location" class="input-field" />
+
+      <!-- Arrival Location -->
+      <label for="lieuArrivee" id="label-lieuArrivee">Arrival Location:</label>
+      <input type="text" id="lieuArrivee" name="lieuArrivee" placeholder="Enter arrival location" class="input-field" />
+
+      <!-- Departure Date -->
+      <label for="date_depart" id="label-dateDepart">Departure Date:</label>
+      <input type="date" id="date_depart" name="date_depart" class="input-field" />
+
+      <!-- Number of Seats -->
+      <label for="nbrPlaces" id="label-nbrPlaces">Number of Seats:</label>
+      <input type="number" id="nbrPlaces" name="nbrPlaces" placeholder="Enter number of seats" min="1" class="input-field" />
+
+      <!-- Price Range -->
+      <label for="maxPrice" id="label-maxPrice">Maximum Price:</label>
+      <input type="number" id="maxPrice" name="maxPrice" placeholder="Enter maximum price" step="0.5" min="0" class="input-field" />
+
+      <button type="submit" id="submit-button">Search</button>
+    </form>
+  </section>
+</div>
+<footer id="footer">
+  <p id="footer-text">Contact Us | Privacy Policy | Terms of Service</p>
+</footer>
+</body>
+</html>
