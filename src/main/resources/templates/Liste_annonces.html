@@ -14,7 +14,7 @@
     </script>
 
     <script th:src="@{/js/myRides.js}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcrjx73S3Iq0mME8Gk5Hoc8c9sSHo-8Vo&libraries=places&callback=initMap" async defer></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places&callback=initMap'}" async defer></script>
 
 </head>
 <body>

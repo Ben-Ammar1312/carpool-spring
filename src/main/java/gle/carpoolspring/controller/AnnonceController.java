@@ -11,6 +11,7 @@ import gle.carpoolspring.repository.ConducteurRepository;
 import gle.carpoolspring.service.AnnonceService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,13 @@ public class AnnonceController {
     @Autowired
     private ConducteurRepository conducteurRepository;
 
+    @Value("${google.api.key}")
+    private String googleApiKey;
+
     @GetMapping("/annonces/post-ride")
-    public String postRidePage() {
-        return "post-ride"; // Correspond au nom de votre fichier HTML (post-ride.html)
+    public String postRidePage(Model model) {
+        model.addAttribute("googleApiKey", googleApiKey);
+        return "post-ride";
     }
 
 
@@ -105,6 +110,7 @@ public class AnnonceController {
         System.out.println("Saving Annonce: " + annonce);
 
         annulationAnnonceService.saveAnnonce(annonce);
+
         return "redirect:/annonces/post-ride?success";
     }
 
@@ -153,7 +159,7 @@ public class AnnonceController {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
-
+            model.addAttribute("googleApiKey", googleApiKey);
             model.addAttribute("annonces", myAnnonces);
             model.addAttribute("annoncesJson", annoncesJson);
             return "liste_annonces";
@@ -180,6 +186,7 @@ public class AnnonceController {
         public String showUpdateForm(@PathVariable("id") int id_annonce, Model model) {
             Annonce annonce = annulationAnnonceService.getAnnonceById(id_annonce);
             model.addAttribute("annonce", annonce);
+            model.addAttribute("googleApiKey", googleApiKey);
             return "edit_annonce";
         }
 
