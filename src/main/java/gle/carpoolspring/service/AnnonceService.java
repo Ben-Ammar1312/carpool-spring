@@ -96,4 +96,8 @@ public class AnnonceService {
         return annonceRepository.findByConducteur(conducteur);
     }
 
+
+    public List<Annonce> searchRides(String lieuDepart, String lieuArrivee, String date_depart, Integer nbrPlaces, Float maxPrice) {
+        return annonceRepository.searchRides(lieuDepart, lieuArrivee, date_depart, nbrPlaces, maxPrice);
+    }
 }
