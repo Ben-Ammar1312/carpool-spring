@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,16 +10,16 @@ import lombok.Setter;
 public class Voiture {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    int id_voiture;
-    String matricule;
-    String model;
-    String couleur;
-    String marque;
+    private int id_voiture;
+    private String matricule;
+    private String model;
+    private String couleur;
+    private String marque;
 
     // Many voitures can belong to one conducteur
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    private gle.carpoolspring.models.Conducteur conducteur;
+    private gle.carpoolspring.model.Conducteur conducteur;
 
 
 }

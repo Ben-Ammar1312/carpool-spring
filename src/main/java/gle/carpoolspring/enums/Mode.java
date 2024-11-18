@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.enums;
 
 public enum Mode {
     CASH,EN_LIGNE

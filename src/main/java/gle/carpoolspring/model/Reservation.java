@@ -1,5 +1,6 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
+import gle.carpoolspring.enums.Etat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,25 +11,25 @@ import lombok.Setter;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    int id_reservation;
-    String date_reservation;
-    int nbrPlaces;
+    private int id_reservation;
+    private String date_reservation;
+    private int nbrPlaces;
 
     @Enumerated(EnumType.STRING)
-    Etat etat;
+    private Etat etat;
 
 
     @ManyToOne
     @JoinColumn(name = "id_passager", nullable = false)
-    private gle.carpoolspring.models.Passager passager;
+    private gle.carpoolspring.model.Passager passager;
 
 
     @ManyToOne
     @JoinColumn(name = "id_annonce", nullable = false)
-    private gle.carpoolspring.models.Annonce annonce;
+    private gle.carpoolspring.model.Annonce annonce;
 
     @OneToOne
     @JoinColumn(name = "id_paiement")
-    private gle.carpoolspring.models.Paiement paiement;
+    private gle.carpoolspring.model.Paiement paiement;
 
 }

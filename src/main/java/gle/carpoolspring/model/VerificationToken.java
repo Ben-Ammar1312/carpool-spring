@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 import java.time.LocalDateTime;
 

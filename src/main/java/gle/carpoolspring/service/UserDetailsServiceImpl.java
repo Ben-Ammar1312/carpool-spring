@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import gle.carpoolspring.models.User;
+import gle.carpoolspring.model.User;
 import gle.carpoolspring.repository.UserRepository;
 
 @Service

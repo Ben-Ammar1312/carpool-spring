@@ -1,12 +1,10 @@
 package gle.carpoolspring.service;
 
-import gle.carpoolspring.models.User;
+import gle.carpoolspring.model.User;
 import gle.carpoolspring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {

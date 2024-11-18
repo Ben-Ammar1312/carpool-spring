@@ -1,5 +1,7 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
+import gle.carpoolspring.enums.Etat;
+import gle.carpoolspring.enums.Mode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,15 +12,15 @@ import lombok.Setter;
 public class Paiement {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    int id_paiement;
-    String date_paiement;
-    Float montant;
+    private int id_paiement;
+    private String date_paiement;
+    private Float montant;
 
     @Enumerated(EnumType.STRING)
-    Etat etat;
+    private Etat etat;
 
     @Enumerated(EnumType.STRING)
-    gle.carpoolspring.models.Mode mode;
+    private Mode mode;
 
     @OneToOne(mappedBy = "paiement")
     private Reservation reservation;

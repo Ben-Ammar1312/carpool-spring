@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import lombok.Setter;
 public class Avis {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    int id_avis;
-    float note;
+    private int id_avis;
+    private float note;
 
 
     @ManyToOne

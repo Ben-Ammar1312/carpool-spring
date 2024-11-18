@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier une Annonce</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('https://www.2008php.com/2021_Website_appreciate/2022-11-08/20221108174758.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(43, 43, 43, 0.8);
+            z-index: 1;
+        }
+
+        header nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .container {
+            margin-top: 80px;
+            padding: 30px;
+            background-color: rgb(166, 162, 162);
+            border-radius: 20px;
+            z-index: 1;
+            max-height: 70vh;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        footer {
+            background-color: #2b2b2b;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-top: auto;
+        }
+
+        footer p {
+            color: #fff;
+        }
+
+        footer a {
+            color: #ffffff;
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        footer a:hover {
+            color: #bbbbbb;
+        }
+
+        .btn-custom-save {
+            background-color: #3b7d93; /* Bleu pastel */
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-custom-save:hover {
+            background-color: #96b2bf; /* Bleu pastel plus foncé */
+        }
+
+        .btn-custom-cancel {
+            background-color: #9e483f; /* Rouge pastel */
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-custom-cancel:hover {
+            background-color: #e7938b; /* Rouge pastel plus foncé */
+        }
+
+        .btn-custom-cancel:focus,
+        .btn-custom-save:focus {
+            outline: 2px solid #FFD700;
+            outline-offset: 4px;
+        }
+
+        .modal-content {
+            z-index: 1050;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div>Carpool</div>
+    <nav>
+        <a href="{{ path('app_login') }}">Connexion</a>
+        <a href="{{ path('app_register') }}">Inscription</a>
+        <a href="{{ path('app_profilemanagement') }}">Profil</a>
+    </nav>
+</header>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Modifier une Annonce</h1>
+
+    <!-- Form for editing an "Annonce" -->
+    <form th:action="@{'/updateAnnonce/' + ${annonce.id_annonce}}" th:object="${annonce}" method="post">
+
+        <!-- Departure Location -->
+        <div class="mb-3">
+            <label for="lieuDepart" class="form-label">Lieu de Départ</label>
+            <input type="text" class="form-control" id="lieuDepart" th:field="*{lieuDepart}" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('lieuDepart')}" th:errors="*{lieuDepart}">Erreur</p>
+        </div>
+
+        <!-- Arrival Location -->
+        <div class="mb-3">
+            <label for="lieuArrivee" class="form-label">Lieu d'Arrivée</label>
+            <input type="text" class="form-control" id="lieuArrivee" th:field="*{lieuArrivee}" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('lieuArrivee')}" th:errors="*{lieuArrivee}">Erreur</p>
+        </div>
+
+        <!-- Departure Date -->
+        <div class="mb-3">
+            <label for="dateDepart" class="form-label">Date de Départ</label>
+            <input type="date" class="form-control" id="dateDepart" th:field="*{dateDepart}" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('dateDepart')}" th:errors="*{dateDepart}">Erreur</p>
+        </div>
+
+        <!-- Departure Time -->
+        <div class="mb-3">
+            <label for="heureDepart" class="form-label">Heure de Départ</label>
+            <input type="time" class="form-control" id="heureDepart" th:field="*{heureDepart}" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('heureDepart')}" th:errors="*{heureDepart}">Erreur</p>
+        </div>
+
+        <!-- Number of Seats -->
+        <div class="mb-3">
+            <label for="nbrPlaces" class="form-label">Nombre de Places</label>
+            <input type="number" class="form-control" id="nbrPlaces" th:field="*{nbrPlaces}" min="1" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('nbrPlaces')}" th:errors="*{nbrPlaces}">Erreur</p>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+            <label for="prix" class="form-label">Prix</label>
+            <input type="number" step="0.01" class="form-control" id="prix" th:field="*{prix}" required>
+            <p class="text-danger" th:if="${#fields.hasErrors('prix')}" th:errors="*{prix}">Erreur</p>
+        </div>
+
+
+
+        <!-- Action Buttons -->
+        <button type="submit" class="btn btn-custom-save">Enregistrer</button>
+        <a href="/allAnnonces" class="btn btn-custom-cancel">Annuler</a>
+    </form>
+</div>
+
+<footer>
+    <p>Contactez-nous | Politique de confidentialité | Conditions d'utilisation</p>
+</footer>
+</body>
+</html>

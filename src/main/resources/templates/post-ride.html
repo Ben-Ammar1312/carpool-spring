@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title >Post a Ride</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAcrjx73S3Iq0mME8Gk5Hoc8c9sSHo-8Vo&libraries=places"></script>
+
+</head>
+<body>
+<div class="container mt-5 d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card p-4 shadow-lg" style="width: 400px; background-color: #fff;">
+<h1>Post a Ride</h1>
+
+<div th:if="${param.success}" style="color: green;">
+    Ride posted successfully!
+</div>
+
+
+<form class="ride-posting-form" th:action="@{/annonces/addAnnonce}" method="post">
+    <input type="text" placeholder="Departure Location" name="lieuDepart" required />
+    <input type="hidden" name="lieuDepartLat" id="lieuDepartLat"/>
+    <input type="hidden" name="lieuDepartLng" id="lieuDepartLng"/>
+    <div id="waypoint-section">
+        <label>Waypoints:</label>
+
+            <button type="button" onclick="addWaypoint()">+</button>
+
+    </div>
+    <input type="text" placeholder="Destination" name="lieuArrivee" required />
+    <input type="hidden" name="lieuArriveeLat" id="lieuArriveeLat"/>
+    <input type="hidden" name="lieuArriveeLng" id="lieuArriveeLng"/>
+    <input type="date" name="dateDepart" required />
+    <input type="time" name="heureDepart" required />
+    <input type="number" placeholder="Available Seats" name="nbrPlaces" min="1" required />
+    <input type="number" placeholder="Price per Passenger" name="prix" min="0" step="5" required />
+    <button type="submit">Post Ride</button>
+</form>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+</div>
+<script>
+    let waypointIndex = 0;
+
+    function addWaypoint() {
+        const waypointSection = document.getElementById('waypoint-section');
+        const newWaypointDiv = document.createElement('div');
+        newWaypointDiv.classList.add('waypoint-input','mb-2');
+        newWaypointDiv.innerHTML = `
+            <div class="input-group">
+            <input type="text" name="waypoints[${waypointIndex}].address" placeholder="Add Waypoint" class=" form-control waypoint-address" required />
+            <button type="button" class="btn btn-danger" onclick="removeWaypoint(this)">-</button>
+        </div>`;
+        waypointSection.appendChild(newWaypointDiv);
+        const newInput = newWaypointDiv.querySelector('.waypoint-address');
+        initializeAutocompleteForInput(newInput);
+        waypointIndex++;
+    }
+
+    function removeWaypoint(button) {
+        const waypointDiv = button.closest('.waypoint-input');
+        waypointDiv.remove();
+        reIndexWaypoints();
+    }
+
+    function reIndexWaypoints() {
+        const waypoints = document.querySelectorAll('.waypoint-input');
+        waypointIndex = 0;
+        waypoints.forEach(function(div) {
+            const addressInput = div.querySelector('.waypoint-address');
+            addressInput.name = `waypoints[${waypointIndex}].address`;
+            // Remove existing latitude and longitude hidden inputs
+            const latInput = div.querySelector(`input[name^="waypoints"][name$=".latitude"]`);
+            const lngInput = div.querySelector(`input[name^="waypoints"][name$=".longitude"]`);
+            if (latInput) latInput.remove();
+            if (lngInput) lngInput.remove();
+            waypointIndex++;
+        });
+    }
+
+
+    function initializeAutocompleteForInput(input) {
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                alert("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            let latInputId = '';
+            let lngInputId = '';
+
+            if (input.name === 'lieuDepart') {
+                latInputId = 'lieuDepartLat';
+                lngInputId = 'lieuDepartLng';
+            } else if (input.name === 'lieuArrivee') {
+                latInputId = 'lieuArriveeLat';
+                lngInputId = 'lieuArriveeLng';
+            } else {
+                // For waypoints
+                latInputId = input.name.replace('.address', '.latitude');
+                lngInputId = input.name.replace('.address', '.longitude');
+            }
+
+            // Set the values of the hidden inputs
+            if (latInputId && lngInputId) {
+                if (input.name === 'lieuDepart' || input.name === 'lieuArrivee') {
+                    document.getElementById(latInputId).value = place.geometry.location.lat();
+                    document.getElementById(lngInputId).value = place.geometry.location.lng();
+                } else {
+                    // For waypoints
+                    // Remove existing latitude and longitude inputs if they exist
+                    let existingLatInput = input.parentNode.querySelector(`input[name="${latInputId}"]`);
+                    let existingLngInput = input.parentNode.querySelector(`input[name="${lngInputId}"]`);
+                    if (existingLatInput) existingLatInput.remove();
+                    if (existingLngInput) existingLngInput.remove();
+
+
+                    let latInput = document.createElement('input');
+                    latInput.type = 'hidden';
+                    latInput.name = latInputId;
+                    latInput.value = place.geometry.location.lat();
+                    input.parentNode.appendChild(latInput);
+
+                    let lngInput = document.createElement('input');
+                    lngInput.type = 'hidden';
+                    lngInput.name = lngInputId;
+                    lngInput.value = place.geometry.location.lng();
+                    input.parentNode.appendChild(lngInput);
+                }
+            }
+        });
+    }
+
+
+    function initializeAutocomplete() {
+        // Initialize for departure and arrival inputs
+        const departInput = document.querySelector('input[name="lieuDepart"]');
+        const arriveeInput = document.querySelector('input[name="lieuArrivee"]');
+        initializeAutocompleteForInput(departInput);
+        initializeAutocompleteForInput(arriveeInput);
+
+        // Initialize for existing waypoint inputs
+        const inputs = document.getElementsByClassName('waypoint-address');
+        for (let i = 0; i < inputs.length; i++) {
+            initializeAutocompleteForInput(inputs[i]);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeAutocomplete();
+    });
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

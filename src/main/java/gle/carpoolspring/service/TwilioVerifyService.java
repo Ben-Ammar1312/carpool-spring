@@ -3,7 +3,7 @@ package gle.carpoolspring.service;
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;
 import com.twilio.rest.verify.v2.service.VerificationCheck;
-import gle.carpoolspring.models.User;
+import gle.carpoolspring.model.User;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

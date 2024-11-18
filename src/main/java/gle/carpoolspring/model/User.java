@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 
 import gle.carpoolspring.enums.Genre;
@@ -11,8 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,10 +22,12 @@ import java.util.stream.Collectors;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-public  class User implements UserDetails {
+public  class User implements UserDetails , Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id_user;
+    private int id_user;
     @NotBlank(message = "Nom (Last Name) is required.")
     private String nom;
 
@@ -64,15 +67,15 @@ public  class User implements UserDetails {
 
 
     @OneToMany(mappedBy = "sender")
-    private List<gle.carpoolspring.models.Message> sentMessages;
+    private List<gle.carpoolspring.model.Message> sentMessages;
 
 
     @OneToMany(mappedBy = "receiver")
-    private List<gle.carpoolspring.models.Message> receivedMessages;
+    private List<gle.carpoolspring.model.Message> receivedMessages;
 
 
     @OneToMany(mappedBy = "user")
-    private List<gle.carpoolspring.models.Reclamation> reclamations;
+    private List<gle.carpoolspring.model.Reclamation> reclamations;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

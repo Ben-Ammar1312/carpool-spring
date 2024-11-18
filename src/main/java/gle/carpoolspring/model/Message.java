@@ -1,4 +1,4 @@
-package gle.carpoolspring.models;
+package gle.carpoolspring.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import lombok.Setter;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    int id_message;
-    String date_message;
-    String content_message;
+    private int id_message;
+    private String date_message;
+    private String content_message;
 
 
 

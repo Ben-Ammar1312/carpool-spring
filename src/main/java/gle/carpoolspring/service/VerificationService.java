@@ -9,8 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import gle.carpoolspring.models.User;
-import gle.carpoolspring.models.VerificationToken;
+import gle.carpoolspring.model.User;
+import gle.carpoolspring.model.VerificationToken;
 import gle.carpoolspring.repository.UserRepository;
 import gle.carpoolspring.repository.VerificationTokenRepository;
 

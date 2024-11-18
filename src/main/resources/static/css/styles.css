@@ -310,11 +310,11 @@ footer a:hover {
 }
 
 .ride-list {
-    width: 40%;
+
     background-color: #f9f9f9;
     padding: 20px;
     overflow-y: auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .ride-list h2 {
@@ -322,11 +322,7 @@ footer a:hover {
 }
 
 .ride {
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .ride p {
@@ -341,6 +337,8 @@ footer a:hover {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    opacity: 1;            /* Ensure full opacity */
+    pointer-events: auto;
 }
 
 .ride button:hover {
@@ -348,10 +346,12 @@ footer a:hover {
 }
 
 .map-view {
-    width: 60%;
-    height: 100%;
+
+
+    height: 80vh;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position:relative;
+
 }
 /* Style for Ride Details Section */
 .ride-details-content {
