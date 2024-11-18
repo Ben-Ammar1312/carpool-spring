@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import gle.carpoolspring.models.User;
+import gle.carpoolspring.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {

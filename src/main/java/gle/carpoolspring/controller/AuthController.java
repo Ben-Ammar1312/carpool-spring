@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.Principal;
 import java.util.Collections;
 
 import gle.carpoolspring.service.TwilioVerifyService;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import gle.carpoolspring.models.Role;
-import gle.carpoolspring.models.User;
+import gle.carpoolspring.model.Role;
+import gle.carpoolspring.model.User;
 import gle.carpoolspring.repository.RoleRepository;
 import gle.carpoolspring.repository.UserRepository;
 import gle.carpoolspring.service.VerificationService;

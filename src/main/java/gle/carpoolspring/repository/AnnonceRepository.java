@@ -1,11 +1,13 @@
 package gle.carpoolspring.repository;
 
-import gle.carpoolspring.models.Annonce;
+import gle.carpoolspring.model.Annonce;
+import gle.carpoolspring.model.Conducteur;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
-    List<Annonce> findByConducteur_id_user(int id_user);
+    //  List<Annonce> findByConducteur_IdUser(int idUser);
+    List<Annonce> findByConducteur(Conducteur conducteur);
 
 }

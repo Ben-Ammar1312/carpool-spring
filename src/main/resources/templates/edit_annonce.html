@@ -176,8 +176,7 @@
             <p class="text-danger" th:if="${#fields.hasErrors('prix')}" th:errors="*{prix}">Erreur</p>
         </div>
 
-        <!-- CSRF Protection -->
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
 
         <!-- Action Buttons -->
         <button type="submit" class="btn btn-custom-save">Enregistrer</button>
