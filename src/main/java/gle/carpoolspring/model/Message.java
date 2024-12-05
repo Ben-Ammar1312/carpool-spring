@@ -10,19 +10,19 @@ import lombok.Setter;
 @Setter
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_message;
+
     private String date_message;
-    private String content_message;
-
-
+    public String content_message;
 
     @ManyToOne
     @JoinColumn(name = "id_sender", nullable = false)
-    private User sender;
+    private User sender; // Sender user
 
     @ManyToOne
-    @JoinColumn(name = "id_receiver",nullable = false)
-    private User receiver;
-
+    @JoinColumn(name = "id_receiver", nullable = false)
+    private User receiver; // Receiver user
 }
+
+
