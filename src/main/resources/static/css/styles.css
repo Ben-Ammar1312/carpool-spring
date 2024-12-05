@@ -11,16 +11,7 @@ body {
     flex-direction: column;
 }
 
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for readability */
-    z-index: 0;
-}
+
 .container {
     position: relative;
     z-index: 1; /* This ensures the form is above the overlay */
@@ -31,7 +22,7 @@ header {
     align-items: center;
     padding: 20px;
     background-color: rgba(43, 43, 43, 0.8); /* Make the menu background more visible */
-    z-index: 1;
+    z-index: 2; /* Ensures the header stays above other elements */
 }
 
 header nav a {
@@ -98,11 +89,10 @@ footer {
     padding: 20px;
     text-align: center;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    /* Adjust footer positioning */
     bottom: 0;
     width: 100%;
-    z-index: 1;
     position: relative;
+    z-index: 2; /* Make sure footer is on top */
 }
 
 footer p {
