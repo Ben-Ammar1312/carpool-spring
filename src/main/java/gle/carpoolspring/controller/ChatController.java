@@ -34,7 +34,7 @@ public class ChatController {
     @GetMapping
     public String showMessages(Model model, Principal principal) {
         User loggedInUser = userService.findByEmail(principal.getName());
-        int userId = loggedInUser.getId_user();
+        int userId = loggedInUser.getIdUser();
 
         // Retrieve Linked Users With The Logged User
         List<Integer> linkeduserslist = linkedUserService.getLinkedUsersIds(userId);
@@ -51,9 +51,9 @@ public class ChatController {
         // Group messages by conversation partner
         Map<Integer, List<Message>> conversations = messages.stream()
                 .collect(Collectors.groupingBy(message ->
-                        message.getSender().getId_user() == userId
-                                ? message.getReceiver().getId_user()
-                                : message.getSender().getId_user()
+                        message.getSender().getIdUser() == userId
+                                ? message.getReceiver().getIdUser()
+                                : message.getSender().getIdUser()
                 ));
 
         // Prepare conversation details
@@ -74,6 +74,7 @@ public class ChatController {
             @RequestParam("receiverId") int receiverId,
             @RequestParam("content") String content
     ) {
+
         User sender = userService.findByEmail(principal.getName());
         User receiver = userService.findById(receiverId);
 

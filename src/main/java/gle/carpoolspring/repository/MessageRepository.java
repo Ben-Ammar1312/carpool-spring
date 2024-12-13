@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
 
-    @Query("SELECT m FROM Message m WHERE m.sender.id_user = :userId OR m.receiver.id_user = :userId")
+    @Query("SELECT m FROM Message m WHERE m.sender.idUser = :userId OR m.receiver.idUser = :userId")
     List<Message> findAllByUserId(@Param("userId") int userId);
 
-    @Query("SELECT m FROM Message m WHERE (m.sender.id_user = :senderId AND m.receiver.id_user = :receiverId) " +
-            "OR (m.sender.id_user = :receiverId AND m.receiver.id_user = :senderId)")
+    @Query("SELECT m FROM Message m WHERE (m.sender.idUser = :senderId AND m.receiver.idUser = :receiverId) " +
+            "OR (m.sender.idUser = :receiverId AND m.receiver.idUser = :senderId)")
     List<Message> findMessagesBySenderAndReceiver(@Param("senderId") int senderId,
                                                   @Param("receiverId") int receiverId);
 

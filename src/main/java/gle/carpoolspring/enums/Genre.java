@@ -1,5 +1,5 @@
 package gle.carpoolspring.enums;
 
 public enum Genre {
-    HOMME,FEMME
+    Homme,Femme
 }

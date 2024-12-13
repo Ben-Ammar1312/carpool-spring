@@ -136,13 +136,13 @@
   <h2 th:text="'Conversation with ' + ${conversation.key}"></h2>
   <div th:each="message : ${conversation.value}">
     <p class="message">
-      <span class="sender" th:text="${message.sender.id_user == #authentication.principal.id_user ? 'You' : message.sender.prenom + ' ' + message.sender.nom}"></span>:
+      <span class="sender" th:text="${message.sender.idUser == #authentication.principal.idUser ? 'You' : message.sender.prenom + ' ' + message.sender.nom}"></span>:
       <span th:text="${message.content_message}"></span>
     </p>
   </div>
   <form th:action="@{/chat/send}" method="post">
     <input type="hidden" name="receiverId"
-           th:value="${conversation.value[0].receiver.id_user == #authentication.principal.id_user ? conversation.value[0].sender.id_user : conversation.value[0].receiver.id_user}" />
+           th:value="${conversation.value[0].receiver.idUser == #authentication.principal.idUser ? conversation.value[0].sender.idUser : conversation.value[0].receiver.idUser}" />
     <textarea name="content" placeholder="Type your message..." required></textarea>
     <button type="submit">Send</button>
   </form>

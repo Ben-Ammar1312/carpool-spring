@@ -12,11 +12,11 @@ import java.util.List;
 public interface LinkedUserRepository extends JpaRepository<LinkedUser, Integer> {
 
     @Query("SELECT CASE " +
-            "WHEN l.user1.id_user = :userId THEN l.user2.id_user " +
-            "WHEN l.user2.id_user = :userId THEN l.user1.id_user " +
+            "WHEN l.user1.idUser = :userId THEN l.user2.idUser " +
+            "WHEN l.user2.idUser = :userId THEN l.user1.idUser " +
             "END " +
             "FROM LinkedUser l " +
-            "WHERE l.user1.id_user = :userId OR l.user2.id_user = :userId")
+            "WHERE l.user1.idUser = :userId OR l.user2.idUser = :userId")
     List<Integer> findLinkedUserIdsByUserId(@Param("userId") int userId);
 
 }

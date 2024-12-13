@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int id_message;
 
     private String date_message;
