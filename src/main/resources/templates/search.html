@@ -5,15 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Rides</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var annoncesData = /*[[${annoncesJson}]]*/;
+        /*]]>*/
+        annoncesData = JSON.parse(annoncesData);
+    </script>
+
+    <script th:src="@{/js/myRides.js}"></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places&callback=initMap'}" async defer></script>
     <style>
         body {
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
             background: url('/images/road.jpg') no-repeat center center fixed;
             background-size: cover;
+            background-position: center 80%;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+
 
         body::before {
             content: '';
@@ -27,12 +41,14 @@
         }
 
         .content-wrapper {
-            position: relative;
-            z-index: 1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+            width: 100%; /* Optional, ensures responsiveness */
         }
 
         .search-container {

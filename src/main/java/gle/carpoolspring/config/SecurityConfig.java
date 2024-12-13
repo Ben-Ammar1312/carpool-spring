@@ -34,13 +34,14 @@ public class SecurityConfig {
                 // Configure form login
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .defaultSuccessUrl("/search", true)
                         .permitAll()
                 )
                 // Configure logout
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
+                );
 
                 ).httpBasic();
 

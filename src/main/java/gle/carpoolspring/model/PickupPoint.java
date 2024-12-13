@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class PickupPoint {
 
     @ManyToOne
     @JoinColumn(name="id_annonce")
+    @JsonIgnore
     private Annonce annonce;
 
 }

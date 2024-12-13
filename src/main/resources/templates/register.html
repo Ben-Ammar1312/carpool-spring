@@ -44,7 +44,7 @@
             <div class="form-group mb-3">
 
 
-                    <select name="role" th:field="*{genre}"  class="form-select">
+                    <select name="genre" th:field="*{genre}"  class="form-select">
                         <option th:each="genre : ${T(gle.carpoolspring.enums.Genre).values()}"
                                 th:value="${genre}"
                                 th:text="${genre}"></option>

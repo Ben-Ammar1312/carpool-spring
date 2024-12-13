@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import gle.carpoolspring.service.TwilioVerifyService;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ import gle.carpoolspring.repository.UserRepository;
 import gle.carpoolspring.service.VerificationService;
 
 import jakarta.validation.Valid;
-
+@Slf4j
 @Controller
 public class AuthController {
 
@@ -98,7 +99,7 @@ public class AuthController {
         // Save the user
         userRepository.save(user);
 
-        httpSession.setAttribute("userIdForSmsVerification", user.getId_user());
+        httpSession.setAttribute("userIdForSmsVerification", user.getIdUser());
         twilioVerifyService.sendVerificationCode(user.getTelephone());
         // Send verification email (if implemented)
         verificationService.sendVerificationEmail(user);
@@ -112,10 +113,7 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/dashboard")
-    public String showDashboard() {
-        return "dashboard";
-    }
+
 
 
 

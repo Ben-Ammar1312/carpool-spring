@@ -1,13 +1,22 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gle.carpoolspring.enums.Etat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id_reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -31,5 +40,11 @@ public class Reservation {
     @OneToOne
     @JoinColumn(name = "id_paiement")
     private gle.carpoolspring.model.Paiement paiement;
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WaypointSuggestion> waypointSuggestions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Waypoint> waypoints = new ArrayList<>();
 
 }

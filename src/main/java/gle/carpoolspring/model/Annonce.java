@@ -1,31 +1,47 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import gle.carpoolspring.enums.Status;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id_annonce")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Annonce {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int id_annonce;
     private LocalDate dateDepart;
+    @DecimalMin(value = "0.0")
     private Float prix;
     private String heureDepart;
     private String lieuArrivee;
     private String lieuDepart;
+    @Min(1)
     private int nbrPlaces;
     private boolean isCanceled = false;
     private Double departLat;
     private Double departLng;
     private Double arriveLat;
     private Double arriveLng;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 
 
@@ -35,15 +51,15 @@ public class Annonce {
 
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<Reservation> reservations;
+    private Set<Reservation> reservations;
 
     @OneToMany(mappedBy = "annonce",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<WaypointSuggestion> waypointSuggestions;
+    private Set<WaypointSuggestion> waypointSuggestions;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonIgnoreProperties("annonce")
-    private List<Waypoint> waypoints;
+    private Set<Waypoint> waypoints;
 
-
+    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PickupPoint> pickupPoints;
 
 }

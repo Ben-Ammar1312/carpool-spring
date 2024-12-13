@@ -1,0 +1,43 @@
+<!-- manage-suggestions.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Waypoint Suggestions</title>
+</head>
+<body>
+<h1>Pending Waypoint Suggestions</h1>
+<table>
+    <tr>
+        <th>Annonce</th>
+        <th>Coordinates</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="suggestion : ${suggestions}">
+        <td th:text="${suggestion.annonce.id_annonce}"></td>
+        <td th:text="'(' + ${suggestion.latitude} + ', ' + ${suggestion.longitude} + ')'"></td>
+        <td>
+            <button th:attr="data-suggestion-id=${suggestion.id}" onclick="approveSuggestion(this)">Approve</button>
+            <button th:attr="data-suggestion-id=${suggestion.id}" onclick="rejectSuggestion(this)">Reject</button>
+        </td>
+    </tr>
+</table>
+
+<script>
+    function approveSuggestion(button) {
+        let suggestionId = button.getAttribute('data-suggestion-id');
+        fetch('/driver/waypoint/' + suggestionId + '/approve', { method: 'POST' })
+            .then(response => response.text())
+            .then(msg => alert(msg))
+            .catch(err => alert('Error: ' + err));
+    }
+
+    function rejectSuggestion(button) {
+        let suggestionId = button.getAttribute('data-suggestion-id');
+        fetch('/driver/waypoint/' + suggestionId + '/reject', { method: 'POST' })
+            .then(response => response.text())
+            .then(msg => alert(msg))
+            .catch(err => alert('Error: ' + err));
+    }
+</script>
+</body>
+</html>

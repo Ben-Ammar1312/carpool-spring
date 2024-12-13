@@ -1,6 +1,9 @@
 package gle.carpoolspring.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +13,9 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class WaypointSuggestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +37,10 @@ public class WaypointSuggestion {
     )
     List<Passager> approvedByPassengers;
     private boolean isRejected = false;
+
+    // Add a foreign key to Reservation if needed
+    @ManyToOne
+    @JoinColumn(name = "id_reservation")
+    @JsonIgnore
+    private Reservation reservation;
 }

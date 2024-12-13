@@ -1,59 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- JavaScript for the map and routes -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var annoncesData = /*[[${annoncesJson}]]*/;
+        /*]]>*/
+        annoncesData = JSON.parse(annoncesData);
+    </script>
+    <script th:src="@{/js/myRides.js}"></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places,geometry&callback=initMap'}" async defer></script>
 </head>
 <body>
-<div class="content-wrapper">
-    <header>
-        <a>
-            <div>Carpool</div>
-        </a>
-        <nav>
-            <a href="#" th:href="@{/logout}">Logout</a>
-            <a href="#" th:href="@{/profile}">Profile</a>
-        </nav>
-    </header>
-    <section class="hero">
-        <h3>Search Results</h3>
-        <div class="results">
+<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Carpool</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+<section class="container-fluid">
+    <div class="row">
+        <!-- Ride List -->
+        <div class="col-md-4 ride-list">
+            <h2>Search Results</h2>
             <div th:if="${#lists.isEmpty(annonces)}">
                 <p>No rides match your criteria.</p>
             </div>
-            <table th:if="${!#lists.isEmpty(annonces)}" class="results-table">
-                <thead>
-                <tr>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Seats Available</th>
-                    <th>Price</th>
-                    <th>Details</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="annonce : ${annonces}">
-                    <td th:text="${annonce.lieuDepart}"></td>
-                    <td th:text="${annonce.lieuArrivee}"></td>
-                    <td th:text="${annonce.dateDepart}"></td>
-                    <td th:text="${annonce.heureDepart}"></td>
-                    <td th:text="${annonce.nbrPlaces}"></td>
-                    <td th:text="${annonce.prix}"></td>
-                    <td>
-                        <a th:href="@{/annonce/{id}(id=${annonce.id_annonce})}" class="btn-details">Details</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.id_annonce}">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        From: <span th:text="${annonce.lieuDepart}"></span>
+                        To: <span th:text="${annonce.lieuArrivee}"></span>
+                    </h5>
+                    <p class="card-text"><strong>Date:</strong> <span th:text="${annonce.dateDepart}"></span></p>
+                    <p class="card-text"><strong>Time:</strong> <span th:text="${annonce.heureDepart}"></span></p>
+                    <p class="card-text"><strong>Seats Available:</strong> <span th:text="${annonce.nbrPlaces}"></span></p>
+                    <p class="card-text"><strong>Price:</strong> $<span th:text="${annonce.prix}"></span></p>
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="button" class="btn btn-primary" onclick="showRoute(this)" th:attr="data-annonce-id=${annonce.id_annonce}">Show Route</button>
+                        <a th:href="@{/annonce/{id}(id=${annonce.id_annonce})}" class="btn btn-secondary">Details</a>
+                        <!-- Button when the ride is not booked and not pending -->
+                        <button type="button" class="btn btn-success"
+                                th:if="${!bookedAnnonceIds.contains(annonce.id_annonce) and !pendingAnnonceIds.contains(annonce.id_annonce)}"
+                                onclick="bookRide(this)"
+                                th:attr="data-annonce-id=${annonce.id_annonce}">
+                            Book
+                        </button>
+
+                        <!-- Button when the ride is already booked -->
+                        <button type="button" class="btn btn-success"
+                                th:if="${bookedAnnonceIds.contains(annonce.id_annonce)}"
+                                disabled>
+                            Booked
+                        </button>
+                        <button type="button" class="btn btn-danger"
+                                th:if="${bookedAnnonceIds.contains(annonce.id_annonce)}"
+                                onclick="cancelBooking(this)"
+                                th:attr="data-annonce-id=${annonce.id_annonce}">
+                            Cancel Booking
+                        </button>
+                        <!-- Button when the ride has a pending reservation -->
+                        <button type="button" class="btn btn-warning"
+                                th:if="${pendingAnnonceIds.contains(annonce.id_annonce)}"
+                                disabled>
+                            En Attente
+                        </button>
+                        <span th:if="${annonce.nbrPlaces == 0}">Fully Booked</span>
+
+
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
-</div>
-<footer>
-    <p>Contact Us | Privacy Policy | Terms of Service</p>
+        <!-- Map -->
+        <div class="col-md-8">
+            <div id="booking-banner" class="alert alert-info" style="display: none; text-align: center;">
+                <strong>Please choose your pickup point.</strong>
+            </div>
+            <div id="map" class="map-view"></div>
+        </div>
+    </div>
+</section>
+<footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+        <p>Contact Us | Privacy Policy | Terms of Service</p>
+        <a href="#" class="text-white me-3">Facebook</a>
+        <a href="#" class="text-white me-3">Twitter</a>
+        <a href="#" class="text-white">Instagram</a>
+    </div>
 </footer>
 </body>
 </html>

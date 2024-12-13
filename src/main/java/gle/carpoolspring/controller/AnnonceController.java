@@ -6,10 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gle.carpoolspring.model.Annonce;
 import gle.carpoolspring.model.Conducteur;
 import gle.carpoolspring.model.Waypoint;
+import gle.carpoolspring.model.WaypointSuggestion;
 import gle.carpoolspring.repository.AnnonceRepository;
 import gle.carpoolspring.repository.ConducteurRepository;
 import gle.carpoolspring.service.AnnonceService;
+import gle.carpoolspring.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,13 +21,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+@Slf4j
 @Controller
 public class AnnonceController {
+
     @Autowired
-    private AnnonceService annulationAnnonceService;
+    private UserService userService;
+
+    @Autowired
+    private AnnonceService annonceService;
 
     @Autowired
     private AnnonceRepository annonceRepository;
@@ -46,7 +53,7 @@ public class AnnonceController {
         Conducteur conducteur = conducteurRepository.findByEmail(principal.getName());
         annonce.setConducteur(conducteur);
 
-        List<Waypoint> waypoints = new ArrayList<>();
+        Set<Waypoint> waypoints = new HashSet<>();
         int index = 0;
         String address;
 
@@ -109,7 +116,7 @@ public class AnnonceController {
         // Log the saved annonce for debugging
         System.out.println("Saving Annonce: " + annonce);
 
-        annulationAnnonceService.saveAnnonce(annonce);
+        annonceService.saveAnnonce(annonce);
 
         return "redirect:/annonces/post-ride?success";
     }
@@ -150,7 +157,7 @@ public class AnnonceController {
         @RequestMapping("/allAnnonces")
         public String listAnnonces(Model model , Principal principal) {
             Conducteur currentConducteur = conducteurRepository.findByEmail(principal.getName());
-            List<Annonce> myAnnonces = annulationAnnonceService.getAnnoncesByConducteur(currentConducteur);
+            List<Annonce> myAnnonces = annonceService.getAnnoncesByConducteur(currentConducteur);
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             String annoncesJson = "";
@@ -168,7 +175,7 @@ public class AnnonceController {
         @PostMapping("/allAnnonces/cancel/{id}")
         public String annulerAnnonce(@PathVariable int id) {
             System.out.println("ID de l'annonce à annuler : " + id);
-            annulationAnnonceService.cancelAnnonce(id);
+            annonceService.cancelAnnonce(id);
             System.out.println("Annonce annulée avec succès");
             return "redirect:/allAnnonces";
         }
@@ -177,14 +184,14 @@ public class AnnonceController {
 
         @PostMapping("deleteAnnonce/{id}")
         public String deleteAnnonce(@PathVariable("id") int id) {
-            annulationAnnonceService.deleteAnnonceById(id);
+            annonceService.deleteAnnonceById(id);
             return "redirect:/allAnnonces";
         }
 
 
         @GetMapping("edit_annonce/{id}")
         public String showUpdateForm(@PathVariable("id") int id_annonce, Model model) {
-            Annonce annonce = annulationAnnonceService.getAnnonceById(id_annonce);
+            Annonce annonce = annonceService.getAnnonceById(id_annonce);
             model.addAttribute("annonce", annonce);
             model.addAttribute("googleApiKey", googleApiKey);
             return "edit_annonce";
@@ -197,9 +204,30 @@ public class AnnonceController {
                 RedirectAttributes redirectAttributes
         ) {
             annonce.setId_annonce(id);
-            annulationAnnonceService.updateAnnonce(annonce);
+            annonceService.updateAnnonce(annonce);
             return "redirect:/allAnnonces";
         }
+
+    @GetMapping("/driver/suggestions")
+    public String getDriverSuggestions(Model model, Principal principal) {
+        String email = principal.getName();
+        Conducteur driver = (Conducteur) userService.findByEmail(email);
+        List<Annonce> driverAnnonces = annonceService.getAnnoncesByConducteur(driver);
+
+        // Collect all suggestions from these annonces that are not approved or rejected
+        Set<WaypointSuggestion> suggestions = new HashSet<>();
+        for (Annonce annonce : driverAnnonces) {
+            List<WaypointSuggestion> annonceSuggestions = annonceService.getWaypointSuggestionsByAnnonce(annonce.getId_annonce());
+            for (WaypointSuggestion s : annonceSuggestions) {
+                if (!s.isApprovedByDriver() && !s.isRejected()) {
+                    suggestions.add(s);
+                }
+            }
+        }
+
+        model.addAttribute("suggestions", suggestions);
+        return "manage-suggestions";
+    }
 
 
 

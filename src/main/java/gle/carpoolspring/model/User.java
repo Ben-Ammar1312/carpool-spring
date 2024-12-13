@@ -1,6 +1,7 @@
 package gle.carpoolspring.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import gle.carpoolspring.enums.Genre;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -22,12 +23,13 @@ import java.util.stream.Collectors;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public  class User implements UserDetails , Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_user;
+    private int idUser;
     @NotBlank(message = "Nom (Last Name) is required.")
     private String nom;
 
@@ -116,4 +118,6 @@ public  class User implements UserDetails , Serializable {
     public boolean isEnabled() {
         return enabled;
     }
+
+
 }
