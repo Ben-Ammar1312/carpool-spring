@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
@@ -22,7 +23,7 @@ public class Conducteur extends User{
 
 
     @OneToMany(mappedBy = "conducteur" ,fetch= FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonBackReference
     private List<gle.carpoolspring.model.Annonce> annonces;
 
 

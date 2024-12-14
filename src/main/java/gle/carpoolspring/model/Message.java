@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "id_sender", nullable = false)
+    @JsonBackReference
     private User sender; // Sender user
 
     @ManyToOne

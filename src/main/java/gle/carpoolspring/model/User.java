@@ -1,6 +1,7 @@
 package gle.carpoolspring.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import gle.carpoolspring.enums.Genre;
 import jakarta.persistence.*;
@@ -69,10 +70,12 @@ public  class User implements UserDetails , Serializable {
 
 
     @OneToMany(mappedBy = "sender")
+    @JsonIgnore
     private List<gle.carpoolspring.model.Message> sentMessages;
 
 
     @OneToMany(mappedBy = "receiver")
+    @JsonIgnore
     private List<gle.carpoolspring.model.Message> receivedMessages;
 
 

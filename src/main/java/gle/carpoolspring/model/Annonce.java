@@ -1,9 +1,6 @@
 package gle.carpoolspring.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import gle.carpoolspring.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -47,6 +44,7 @@ public class Annonce {
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
+    @JsonManagedReference
     private Conducteur conducteur;
 
 

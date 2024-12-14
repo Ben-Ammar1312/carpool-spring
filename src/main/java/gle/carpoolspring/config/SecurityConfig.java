@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Configure authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register","/verify-sms","/verify", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/register","/verify-sms","/verify", "/login", "/css/**", "/js/**", "/images/**","/chat").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Configure form login
@@ -41,8 +41,6 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-
-
                 ).httpBasic();
 
         return http.build();
