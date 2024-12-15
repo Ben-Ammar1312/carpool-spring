@@ -6,6 +6,7 @@ import gle.carpoolspring.service.LinkedUserService;
 import gle.carpoolspring.service.MessageService;
 import gle.carpoolspring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -95,6 +96,44 @@ public class ChatController {
 
         return "redirect:/chat";
     }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/view")
+    public ResponseEntity<Void> viewConversation(Principal principal,
+                                                 @RequestBody Map<String, Object> request) {
+        // Read the content of the request and transform the id value to an integer
+        Object partnerIdObj = request.get("partnerId");
+
+        if (partnerIdObj != null) {
+            try {
+                User loggedInUser = userService.findByEmail(principal.getName());
+                int userId = loggedInUser.getIdUser();
+                // Transform the id value to an integer
+                int partnerId = Integer.parseInt(partnerIdObj.toString());
+
+                List<Message> messages = messageService.getUnreadMessages(partnerId, userId);
+
+                for (Message message : messages) {
+                    message.setRead(true);
+                    messageService.saveMessage(message); // Save the updated message
+                }
+
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid partnerId: " + partnerIdObj);
+            }
+        } else {
+            System.err.println("partnerId is missing in the request.");
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
+
+
+
 }
 
 

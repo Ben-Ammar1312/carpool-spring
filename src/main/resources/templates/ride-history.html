@@ -10,8 +10,14 @@
 <header>
   <div>Carpool</div>
   <nav>
-    <a href="#">Sign In</a>
-    <a href="#">Sign Up</a>
+
+    <a href="#" th:href="@{/chat}" class="message-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 0 0 1-2-2V4z"/>
+        <path d="M.05 4.555L8 9.691l7.95-5.136A2 2 0 0 0 14 4H2a2 0 0 0-1.95.555z"/>
+      </svg>
+      <span class="badge" th:text="${unreadMessages}"></span>
+    </a>
     <a href="#">Profile</a>
   </nav>
 </header>

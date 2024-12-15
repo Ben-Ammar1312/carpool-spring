@@ -13,6 +13,30 @@ body {
     position: relative;
 }
 
+.message-icon {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.message-icon .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.unread-message {
+    font-size: 1.2em; /* Adjust the size as needed */
+    font-weight: bold;
+    color: red; /* Optional: change the color to make it more noticeable */
+}
+
+
 
 .container {
     position: relative;
