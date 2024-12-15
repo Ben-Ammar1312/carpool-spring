@@ -25,5 +25,16 @@ public class MessageService {
         return messageRepository.findMessagesBySenderAndReceiver(senderId, receiverId);
     }
 
+    public List<Message> getUnreadMessages(int senderId, int receiverId) {
+        return messageRepository.findUnreadMessagesBySenderAndReceiver(senderId, receiverId);
+    }
+
+    public int countUnreadMessagesForUser(int userId) {
+        return messageRepository.countUnreadMessagesByReceiver(userId);
+    }
+
+
+
+
 
 }

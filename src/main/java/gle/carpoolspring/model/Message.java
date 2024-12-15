@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
@@ -25,6 +24,7 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "id_receiver", nullable = false)
     private User receiver; // Receiver user
+
+    // New attribute to indicate if the message is read or not, with a default value of false
+    private boolean isRead = false;
 }
-
-

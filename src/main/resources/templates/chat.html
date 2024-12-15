@@ -97,6 +97,35 @@
       }
     };
   </script>
+
+  <script>
+    function sendPartnerId(button) {
+      const partnerId = button.getAttribute("data-partner-id");
+      console.log("Sending Partner ID:", partnerId); // For debugging
+
+      fetch("http://127.0.0.1:8080/chat/view", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ partnerId }),
+      })
+              .then(response => {
+                console.log("Response status:", response.status); // Log response status
+                if (response.ok) {
+                  console.log("Partner ID sent successfully.");
+                } else {
+                  return response.text().then(text => {
+                    console.error("Failed to send Partner ID. Response Text:", text); // Log response text
+                  });
+                }
+              })
+              .catch(error => console.error("Error:", error));
+    }
+
+
+  </script>
+
 </head>
 <body>
 <!-- Header -->
@@ -107,6 +136,13 @@
   </a>
 
   <nav>
+    <a href="#" th:href="@{/chat}" class="message-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 0 0 1-2-2V4z"/>
+        <path d="M.05 4.555L8 9.691l7.95-5.136A2 2 0 0 0 14 4H2a2 0 0 0-1.95.555z"/>
+      </svg>
+      <span class="badge" th:text="${unreadMessages}"></span>
+    </a>
     <a href="#" th:href="@{/logout}">Logout</a>
     <a href="#" th:href="@{/profile}">Profile</a>
   </nav>
@@ -124,12 +160,19 @@
   <tbody>
   <tr th:each="conversation, idx : ${conversations}">
     <td th:text="${conversation.key}"></td>
-    <td th:text="${conversation.value[conversation.value.size() - 1].content_message}"></td>
+    <td th:class="${(conversation.value[conversation.value.size() - 1].isRead == false && conversation.value[conversation.value.size() - 1].sender.idUser != #authentication.principal.idUser) ? 'unread-message' : ''}"
+        th:text="${conversation.value[conversation.value.size() - 1].content_message}"></td>
     <td>
-      <button class="expandable" th:attr="data-idx=${idx}" onclick="toggleConversation(this)">View Conversation</button>
+      <button class="expandable"
+              th:attr="data-idx=${idx}, data-partner-id=${conversation.value[0].receiver.idUser == #authentication.principal.idUser ? conversation.value[0].sender.idUser : conversation.value[0].receiver.idUser}"
+              onclick="toggleConversation(this); sendPartnerId(this)">
+        View Conversation
+      </button>
     </td>
   </tr>
   </tbody>
+
+
 </table>
 
 <div th:each="conversation, idx : ${conversations}" th:id="'details-' + ${idx}" class="conversation-details">
