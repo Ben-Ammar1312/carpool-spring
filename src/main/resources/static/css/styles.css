@@ -6,7 +6,7 @@ body {
     background: url('/images/road.jpg') no-repeat center center fixed;
     background-size: cover;
     background-position: center 80%;
-    color: #333;
+    color: #fff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -328,4 +328,27 @@ footer a:hover {
     .map-container {
         height: 300px;
     }
+}
+.content-wrapper {
+    background: rgba(0, 0, 0, 0.6); /* A dark overlay to make white text pop */
+    max-width: 800px; /* Keep it narrow to center the content nicely */
+    margin: 0 auto; /* This centers horizontally */
+    padding: 2rem;
+    border-radius: 8px;
+}
+.StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+    border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+}
+
+#payment-status {
+    margin-top: 20px;
+    font-weight: bold;
 }

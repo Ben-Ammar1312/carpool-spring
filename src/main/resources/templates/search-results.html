@@ -47,7 +47,7 @@
             <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.id_annonce}">
                 <div class="card-body">
                     <h5 class="card-title">
-                        From: <span th:text="${annonce.lieuDepart}"></span>
+                        From: <span th:text="${annonce.lieuDepart}"></span><br>
                         To: <span th:text="${annonce.lieuArrivee}"></span>
                     </h5>
                     <p class="card-text"><strong>Date:</strong> <span th:text="${annonce.dateDepart}"></span></p>
