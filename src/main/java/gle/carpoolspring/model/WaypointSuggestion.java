@@ -1,6 +1,7 @@
 package gle.carpoolspring.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -27,6 +28,7 @@ public class WaypointSuggestion {
 
     @ManyToOne
     @JoinColumn(name="id_annonce")
+    @JsonBackReference
     private Annonce annonce;
 
     @ManyToMany

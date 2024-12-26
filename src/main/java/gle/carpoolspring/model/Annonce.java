@@ -49,15 +49,19 @@ public class Annonce {
 
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL , orphanRemoval = true)
+    @JsonManagedReference
     private Set<Reservation> reservations;
 
     @OneToMany(mappedBy = "annonce",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
     private Set<WaypointSuggestion> waypointSuggestions;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
     private Set<Waypoint> waypoints;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<PickupPoint> pickupPoints;
 
 }

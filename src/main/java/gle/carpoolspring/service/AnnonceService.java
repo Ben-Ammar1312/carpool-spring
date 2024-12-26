@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AnnonceService {
@@ -26,7 +27,9 @@ public class AnnonceService {
     private WaypointRepository waypointRepository;
 
 
-
+    public List<Annonce> findAllByIds(Set<Integer> ids) {
+        return annonceRepository.findAllById(ids);
+    }
 
     public List<Annonce> getAllAnnonces() {
         return annonceRepository.findAll();

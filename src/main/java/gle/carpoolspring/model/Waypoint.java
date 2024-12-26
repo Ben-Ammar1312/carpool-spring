@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Waypoint {
 
     @ManyToOne
     @JoinColumn(name="annonce_id")
+    @JsonBackReference
     private Annonce annonce;
 
     @ManyToOne

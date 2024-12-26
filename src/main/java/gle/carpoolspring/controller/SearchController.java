@@ -1,6 +1,4 @@
 package gle.carpoolspring.controller;
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
-
 import java.security.Principal;
 import java.util.List;
 import java.util.Set;
@@ -59,8 +55,19 @@ public class SearchController {
         if (dateDepart != null && dateDepart.isEmpty()) {
             dateDepart = null;
         }
-
+        String email = principal.getName();
+        User currentUser = userService.findByEmail(email);
         List<Annonce> annonces = annonceService.searchRides(lieuDepart, lieuArrivee, dateDepart, nbrPlaces, maxPrice);
+
+        Set<Integer> bookedAnnonceIds = reservationService.getBookedAnnonceIdsByUser(currentUser.getIdUser());
+        Set<Integer> pendingAnnonceIds = reservationService.getPendingAnnonceIdsByUser(currentUser.getIdUser());
+        // Add to model
+        List<Annonce> userBookedRides = annonceService.findAllByIds(bookedAnnonceIds);
+        for (Annonce bookedRide : userBookedRides) {
+            if (!annonces.contains(bookedRide)) {
+                annonces.add(bookedRide);
+            }
+        }
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         String annoncesJson = "";
@@ -69,15 +76,6 @@ public class SearchController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        // Get current user
-        String email = principal.getName();
-        User currentUser = userService.findByEmail(email);
-
-        // Get IDs of annonces the user has booked
-        Set<Integer> bookedAnnonceIds = reservationService.getBookedAnnonceIdsByUser(currentUser.getIdUser());
-        Set<Integer> pendingAnnonceIds = reservationService.getPendingAnnonceIdsByUser(currentUser.getIdUser());
-        // Add to model
         model.addAttribute("bookedAnnonceIds", bookedAnnonceIds);
         model.addAttribute("pendingAnnonceIds", pendingAnnonceIds);
         model.addAttribute("annonces", annonces);

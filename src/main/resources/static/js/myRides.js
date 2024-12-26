@@ -37,6 +37,7 @@ function showRoute(button) {
 
     if (!annonce) {
         console.error("Annonce not found for ID:", annonceId);
+        console.error("here is the data ", annoncesData);
         return;
     }
 

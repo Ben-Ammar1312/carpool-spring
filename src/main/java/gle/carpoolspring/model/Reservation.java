@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -35,6 +36,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "id_annonce", nullable = false)
+    @JsonBackReference
     private gle.carpoolspring.model.Annonce annonce;
 
     @OneToOne
