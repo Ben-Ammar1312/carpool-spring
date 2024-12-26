@@ -3,6 +3,8 @@ package gle.carpoolspring.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import gle.carpoolspring.dto.AnnonceForm;
+import gle.carpoolspring.dto.WaypointForm;
 import gle.carpoolspring.model.Annonce;
 import gle.carpoolspring.model.Conducteur;
 import gle.carpoolspring.model.Waypoint;
@@ -43,80 +45,53 @@ public class AnnonceController {
 
     @GetMapping("/annonces/post-ride")
     public String postRidePage(Model model) {
+        model.addAttribute("annonceForm", new AnnonceForm());
         model.addAttribute("googleApiKey", googleApiKey);
         return "post-ride";
     }
 
 
     @PostMapping("/annonces/addAnnonce")
-    public String addAnnonce(@ModelAttribute("annonce") Annonce annonce, Principal principal, HttpServletRequest request) {
+    public String addAnnonce(
+            @ModelAttribute("annonceForm") AnnonceForm annonceForm,
+            Principal principal
+    ) {
+        // 1) Find the driver
         Conducteur conducteur = conducteurRepository.findByEmail(principal.getName());
+
+        // 2) Create a real Annonce
+        Annonce annonce = new Annonce();
         annonce.setConducteur(conducteur);
 
-        Set<Waypoint> waypoints = new HashSet<>();
-        int index = 0;
-        String address;
+        // 3) Copy fields from the form
+        annonce.setLieuDepart(annonceForm.getLieuDepart());
+        annonce.setLieuArrivee(annonceForm.getLieuArrivee());
+        annonce.setDepartLat(annonceForm.getDepartLat());
+        annonce.setDepartLng(annonceForm.getDepartLng());
+        annonce.setArriveLat(annonceForm.getArriveLat());
+        annonce.setArriveLng(annonceForm.getArriveLng());
+        annonce.setDateDepart(annonceForm.getDateDepart());
+        annonce.setHeureDepart(annonceForm.getHeureDepart());
+        annonce.setNbrPlaces(annonceForm.getNbrPlaces());
+        annonce.setPrix(annonceForm.getPrix());
 
-        while ((address = request.getParameter("waypoints[" + index + "].address")) != null) {
-            address = address.trim();
-            if (!address.isEmpty()) {
+        // 4) Build the Set<Waypoint> from the form's List<WaypointForm>
+        Set<Waypoint> waypoints = new HashSet<>();
+        for (WaypointForm wf : annonceForm.getWaypoints()) {
+            if (wf.getAddress() != null && !wf.getAddress().trim().isEmpty()) {
                 Waypoint waypoint = new Waypoint();
-                waypoint.setAddress(address);
-                String latParam = request.getParameter("waypoints[" + index + "].latitude");
-                String lngParam = request.getParameter("waypoints[" + index + "].longitude");
-                if (latParam != null && lngParam != null && !latParam.isEmpty() && !lngParam.isEmpty()) {
-                    try {
-                        waypoint.setLatitude(Double.parseDouble(latParam));
-                        waypoint.setLongitude(Double.parseDouble(lngParam));
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid latitude or longitude for waypoint index " + index);
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.err.println("Missing latitude or longitude for waypoint index " + index);
-                }
+                waypoint.setAddress(wf.getAddress());
+                waypoint.setLatitude(wf.getLatitude());
+                waypoint.setLongitude(wf.getLongitude());
+                waypoint.setAnnonce(annonce);
                 waypoints.add(waypoint);
             }
-            index++;
         }
-
-        String departLat = request.getParameter("lieuDepartLat");
-        String departLng = request.getParameter("lieuDepartLng");
-        String arriveeLat = request.getParameter("lieuArriveeLat");
-        String arriveeLng = request.getParameter("lieuArriveeLng");
-
-        if (departLat != null && !departLat.isEmpty() && departLng != null && !departLng.isEmpty()) {
-            try {
-                annonce.setDepartLat(Double.parseDouble(departLat));
-                annonce.setDepartLng(Double.parseDouble(departLng));
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid departure latitude or longitude.");
-                e.printStackTrace();
-            }
-        } else {
-            System.err.println("Missing departure latitude or longitude.");
-        }
-
-        if (arriveeLat != null && !arriveeLat.isEmpty() && arriveeLng != null && !arriveeLng.isEmpty()) {
-            try {
-                annonce.setArriveLat(Double.parseDouble(arriveeLat));
-                annonce.setArriveLng(Double.parseDouble(arriveeLng));
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid arrival latitude or longitude.");
-                e.printStackTrace();
-            }
-        } else {
-            System.err.println("Missing arrival latitude or longitude.");
-        }
-
         annonce.setWaypoints(waypoints.isEmpty() ? null : waypoints);
-        annonce.setLieuDepart(request.getParameter("lieuDepart"));
-        annonce.setLieuArrivee(request.getParameter("lieuArrivee"));
 
-        // Log the saved annonce for debugging
-        System.out.println("Saving Annonce: " + annonce);
-
+        // 5) Save
         annonceService.saveAnnonce(annonce);
+        System.out.println("Saving Annonce: " + annonce);
 
         return "redirect:/annonces/post-ride?success";
     }

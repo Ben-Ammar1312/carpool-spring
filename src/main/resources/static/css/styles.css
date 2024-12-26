@@ -352,3 +352,11 @@ footer a:hover {
     margin-top: 20px;
     font-weight: bold;
 }
+.star-rating .fa-star {
+    color: #ccc; /* empty star color */
+    margin-right: 2px;
+}
+
+.star-rating .fa-star.checked {
+    color: #f5c518; /* filled star color (gold) */
+}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
     <!-- JavaScript for the map and routes -->
@@ -50,6 +51,33 @@
                         From: <span th:text="${annonce.lieuDepart}"></span><br>
                         To: <span th:text="${annonce.lieuArrivee}"></span>
                     </h5>
+                    <!-- Driver info container -->
+                    <div class="d-flex align-items-center my-2">
+                        <!-- Show Driver's photo (if you have it in a folder or DB) -->
+                        <img th:src="${'/uploads/' + annonce.conducteur.photo}"
+                             alt="Driver Photo"
+                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;" />
+
+                        <!-- Driver's name -->
+                        <strong th:text="${annonce.conducteur.nom + ' ' + annonce.conducteur.prenom}"></strong>
+                    </div>
+
+                    <!-- Driver rating in stars -->
+                    <div class="star-rating">
+                        <span th:each="starIndex : ${#numbers.sequence(1,5)}">
+                            <span th:if="${starIndex <= annonce.conducteur.note}">
+                                <i class="fa fa-star"></i>
+                            </span>
+                            <span th:else-if="${(starIndex - annonce.conducteur.note) < 1}">
+                                <i class="fa fa-star-half-o"></i>
+                            </span>
+                            <span th:else>
+                                <i class="fa fa-star-o"></i>
+                            </span>
+                        </span>
+                        <span th:text="${annonce.conducteur.note}">0</span>/5
+                    </div>
+
                     <p class="card-text"><strong>Date:</strong> <span th:text="${annonce.dateDepart}"></span></p>
                     <p class="card-text"><strong>Time:</strong> <span th:text="${annonce.heureDepart}"></span></p>
                     <p class="card-text"><strong>Seats Available:</strong> <span th:text="${annonce.nbrPlaces}"></span></p>

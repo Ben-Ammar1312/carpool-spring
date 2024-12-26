@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import gle.carpoolspring.enums.AvisType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,8 @@ public class Avis {
     private int id_avis;
     private float note;
 
+    @Enumerated(EnumType.STRING)
+    private AvisType avisType;
 
     @ManyToOne
     @JoinColumn(name = "id_conducteur", nullable = false)
