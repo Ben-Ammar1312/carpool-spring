@@ -360,3 +360,8 @@ footer a:hover {
 .star-rating .fa-star.checked {
     color: #f5c518; /* filled star color (gold) */
 }
+
+.star-rating i {
+    color: gold;
+    margin-right: 2px;
+}
