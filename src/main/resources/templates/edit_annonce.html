@@ -13,7 +13,7 @@
         <h1 class="text-center mb-4">Modifier une Annonce</h1>
 
         <!-- Form for editing an "Annonce" -->
-        <form th:action="@{'/updateAnnonce/' + ${annonce.id_annonce}}" th:object="${annonce}" method="post">
+        <form th:action="@{'/updateAnnonce/' + ${annonce.idAnnonce}}" th:object="${annonce}" method="post">
 
             <!-- Departure Location -->
             <div class="mb-3">

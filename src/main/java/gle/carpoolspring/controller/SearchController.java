@@ -79,6 +79,7 @@ public class SearchController {
         model.addAttribute("bookedAnnonceIds", bookedAnnonceIds);
         model.addAttribute("pendingAnnonceIds", pendingAnnonceIds);
         model.addAttribute("annonces", annonces);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("annoncesJson", annoncesJson);
         model.addAttribute("googleApiKey", googleApiKey);
         return "search-results";

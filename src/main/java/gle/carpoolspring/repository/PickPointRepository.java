@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PickPointRepository extends JpaRepository<PickupPoint, Integer> {
-    @Query("select p from PickupPoint p where p.annonce.id_annonce = :annonceId")
+    @Query("select p from PickupPoint p where p.annonce.idAnnonce = :annonceId")
     List<PickupPoint> findByAnnonceId(@Param("annonceId") Integer pickupId);
 
 

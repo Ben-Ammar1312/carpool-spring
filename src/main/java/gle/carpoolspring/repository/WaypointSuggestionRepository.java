@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface WaypointSuggestionRepository extends JpaRepository<WaypointSuggestion, Integer> {
-    @Query("select p from WaypointSuggestion p where p.annonce.id_annonce = :annonceId")
+    @Query("select p from WaypointSuggestion p where p.annonce.idAnnonce = :annonceId")
     List<WaypointSuggestion> findByAnnonceId(@Param("annonceId") Integer pickupId);
 
 }

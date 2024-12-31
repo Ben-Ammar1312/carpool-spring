@@ -19,7 +19,7 @@ public class PickupPoint {
     private String address;
 
     @ManyToOne
-    @JoinColumn(name="id_annonce")
+    @JoinColumn(name="idAnnonce")
     @JsonBackReference
     private Annonce annonce;
 

@@ -11,12 +11,22 @@
     <!-- JavaScript for the map and routes -->
     <script th:inline="javascript">
         /*<![CDATA[*/
+        var currentUserId = [[${currentUser.idUser}]];  // from your model
+        /*]]>*/
+    </script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         var annoncesData = /*[[${annoncesJson}]]*/;
         /*]]>*/
         annoncesData = JSON.parse(annoncesData);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"> </script>
     <script th:src="@{/js/myRides.js}"></script>
     <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places,geometry&callback=initMap'}" async defer></script>
+    <script th:src="@{/js/notifications.js}"></script>
 </head>
 <body>
 <header class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -25,12 +35,25 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a href="#" th:href="@{/chat}" class="message-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 0 0 1-2-2V4z"/>
-                        <path d="M.05 4.555L8 9.691l7.95-5.136A2 2 0 0 0 14 4H2a2 0 0 0-1.95.555z"/>
-                    </svg>
                     <span class="badge" th:text="${unreadMessages}"></span>
                 </a></li>
+
+                    <a class="navbar-brand" href="#">Carpool</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Notifications <span id="notifications-badge" class="badge bg-danger">0</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="notificationsDropdown" id="notifications-menu">
+                        <!-- We will dynamically fill this list with notifications. -->
+                        <!-- Example placeholder -->
+                        <!-- <li><a class="dropdown-item" href="#">No notifications yet</a></li> -->
+                    </ul>
+                </li>
+                        <!-- other nav items like chat, logout, etc. -->
+
+
                 <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
             </ul>
@@ -45,7 +68,7 @@
             <div th:if="${#lists.isEmpty(annonces)}">
                 <p>No rides match your criteria.</p>
             </div>
-            <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.id_annonce}">
+            <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.idAnnonce}">
                 <div class="card-body">
                     <h5 class="card-title">
                         From: <span th:text="${annonce.lieuDepart}"></span><br>
@@ -56,7 +79,7 @@
                         <!-- Show Driver's photo (if you have it in a folder or DB) -->
                         <img th:src="${'/uploads/' + annonce.conducteur.photo}"
                              alt="Driver Photo"
-                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 10px;" />
+                             style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%; margin-right: 10px; background-color: #f0f0f0; border: 2px solid #ccc;" />
 
                         <!-- Driver's name -->
                         <strong th:text="${annonce.conducteur.nom + ' ' + annonce.conducteur.prenom}"></strong>
@@ -86,34 +109,41 @@
                     <p class="card-text"><strong>Seats Available:</strong> <span th:text="${annonce.nbrPlaces}"></span></p>
                     <p class="card-text"><strong>Price:</strong> $<span th:text="${annonce.prix}"></span></p>
                     <div class="d-flex gap-2 mt-3">
-                        <button type="button" class="btn btn-primary" onclick="showRoute(this)" th:attr="data-annonce-id=${annonce.id_annonce}">Show Route</button>
-                        <a th:href="@{/annonce/{id}(id=${annonce.id_annonce})}" class="btn btn-secondary">Details</a>
+                        <button type="button" class="btn btn-primary" onclick="showRoute(this)" th:attr="data-annonce-id=${annonce.idAnnonce}">Show Route</button>
+
                         <!-- Button when the ride is not booked and not pending -->
                         <button type="button" class="btn btn-success"
-                                th:if="${!bookedAnnonceIds.contains(annonce.id_annonce) and !pendingAnnonceIds.contains(annonce.id_annonce)}"
+                                th:if="${!bookedAnnonceIds.contains(annonce.idAnnonce) and !pendingAnnonceIds.contains(annonce.idAnnonce)}"
                                 onclick="bookRide(this)"
-                                th:attr="data-annonce-id=${annonce.id_annonce}">
+                                th:attr="data-annonce-id=${annonce.idAnnonce}">
                             Book
                         </button>
 
                         <!-- Button when the ride is already booked -->
                         <button type="button" class="btn btn-success"
-                                th:if="${bookedAnnonceIds.contains(annonce.id_annonce)}"
+                                th:if="${bookedAnnonceIds.contains(annonce.idAnnonce)}"
                                 disabled>
                             Booked
                         </button>
                         <button type="button" class="btn btn-danger"
-                                th:if="${bookedAnnonceIds.contains(annonce.id_annonce)}"
+                                th:if="${bookedAnnonceIds.contains(annonce.idAnnonce)}"
                                 onclick="cancelBooking(this)"
-                                th:attr="data-annonce-id=${annonce.id_annonce}">
+                                th:attr="data-annonce-id=${annonce.idAnnonce}">
                             Cancel Booking
                         </button>
                         <!-- Button when the ride has a pending reservation -->
                         <button type="button" class="btn btn-warning"
-                                th:if="${pendingAnnonceIds.contains(annonce.id_annonce)}"
+                                th:if="${pendingAnnonceIds.contains(annonce.idAnnonce)}"
                                 disabled>
                             En Attente
                         </button>
+
+                        <!-- Chat Button: Visible only if the ride is booked -->
+                        <a th:if="${bookedAnnonceIds.contains(annonce.idAnnonce)}"
+                           th:href="@{/chat/{rideId}/{passengerId}(rideId=${annonce.idAnnonce},passengerId=${currentUser.getIdUser()})}"
+                           class="btn btn-info">
+                            <i class="bi bi-chat-dots"></i> Chat
+                        </a>
                         <span th:if="${annonce.nbrPlaces == 0}">Fully Booked</span>
 
 
@@ -138,5 +168,7 @@
         <a href="#" class="text-white">Instagram</a>
     </div>
 </footer>
+
+
 </body>
 </html>

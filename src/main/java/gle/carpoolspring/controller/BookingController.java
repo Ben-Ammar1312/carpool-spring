@@ -36,6 +36,8 @@ public class BookingController {
 
     @Autowired
     private PickPointRepository pickPointService;
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("/bookRide")
     @Transactional
@@ -184,6 +186,7 @@ public class BookingController {
             pickPointService.delete(pp);
         }
 
+        notificationService.createNotification(currentUser.getIdUser(), "Your booking has been succesfully cancelled ");
 
         return ResponseEntity.ok(new BookingResponse("Booking cancelled successfully"));
     }

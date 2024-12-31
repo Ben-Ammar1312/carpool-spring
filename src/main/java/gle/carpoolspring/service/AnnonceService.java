@@ -26,6 +26,10 @@ public class AnnonceService {
     @Autowired
     private WaypointRepository waypointRepository;
 
+    public Annonce findById(int id) {
+        return annonceRepository.findById(id).orElse(null);
+    }
+
 
     public List<Annonce> findAllByIds(Set<Integer> ids) {
         return annonceRepository.findAllById(ids);
@@ -42,7 +46,7 @@ public class AnnonceService {
 
 
     public void updateAnnonce(Annonce annonce) {
-        Annonce existingAnnonce = annonceRepository.findById(annonce.getId_annonce())
+        Annonce existingAnnonce = annonceRepository.findById(annonce.getIdAnnonce())
                 .orElseThrow(() -> new RuntimeException("Annonce non trouvée"));
 
         existingAnnonce.setLieuDepart(annonce.getLieuDepart());

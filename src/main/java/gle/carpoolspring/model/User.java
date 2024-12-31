@@ -1,8 +1,10 @@
 package gle.carpoolspring.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gle.carpoolspring.enums.Genre;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -15,9 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idUser")
 public  class User implements UserDetails , Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -69,14 +72,12 @@ public  class User implements UserDetails , Serializable {
     private Boolean agreeTerms;
 
 
-    @OneToMany(mappedBy = "sender")
-    @JsonIgnore
-    private List<gle.carpoolspring.model.Message> sentMessages;
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Message> sentMessages = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "receiver")
-    @JsonIgnore
-    private List<gle.carpoolspring.model.Message> receivedMessages;
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Message> receivedMessages = new HashSet<>();
 
 
     @OneToMany(mappedBy = "user")
@@ -89,6 +90,10 @@ public  class User implements UserDetails , Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @ManyToMany(mappedBy = "participants")
+    @JsonIgnore
+    private Set<Chat> chats;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -122,5 +127,17 @@ public  class User implements UserDetails , Serializable {
         return enabled;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        User user = (User) o;
+        return Objects.equals(idUser, user.idUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUser);
+    }
 }

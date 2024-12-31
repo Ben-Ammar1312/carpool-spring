@@ -27,7 +27,7 @@ public class WaypointSuggestion {
     private boolean approvedByDriver=false;
 
     @ManyToOne
-    @JoinColumn(name="id_annonce")
+    @JoinColumn(name="idAnnonce")
     @JsonBackReference
     private Annonce annonce;
 

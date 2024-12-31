@@ -19,7 +19,7 @@
         <th>Action</th>
     </tr>
     <tr th:each="suggestion : ${suggestions}">
-        <td th:text="${suggestion.annonce.id_annonce}"></td>
+        <td th:text="${suggestion.annonce.idAnnonce}"></td>
         <td th:text="'(' + ${suggestion.latitude} + ', ' + ${suggestion.longitude} + ')'"></td>
         <td>
             <button class="btn btn-primary w-100" th:attr="data-suggestion-id=${suggestion.id}" onclick="approveSuggestion(this)">Approve</button>

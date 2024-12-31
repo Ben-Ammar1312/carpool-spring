@@ -365,3 +365,52 @@ footer a:hover {
     color: gold;
     margin-right: 2px;
 }
+
+#chat-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 500px;
+    margin: 0 auto;
+}
+
+/* styles.css */
+
+#messages {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+#messages .sent {
+    text-align: right;
+    color: blue;
+    margin-bottom: 10px;
+}
+
+#messages .received {
+    text-align: left;
+    color: green;
+    margin-bottom: 10px;
+}
+
+#chat-container {
+    width: 60%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+#message-input {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+}
+
+.message {
+    margin-bottom: 10px;
+}

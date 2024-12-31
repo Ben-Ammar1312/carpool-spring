@@ -33,7 +33,7 @@ function clearPickupMarkers() {
 function showRoute(button) {
     var annonceId = button.getAttribute("data-annonce-id");
     currentAnnonceId = annonceId;
-    var annonce = annoncesData.find(a => a.id_annonce == annonceId);
+    var annonce = annoncesData.find(a => a.idAnnonce == annonceId);
 
     if (!annonce) {
         console.error("Annonce not found for ID:", annonceId);
@@ -98,7 +98,7 @@ function showRoute(button) {
                     }
                 });
             } else {
-                console.log("No pickup points for annonce ID:", annonce.id_annonce);
+                console.log("No pickup points for annonce ID:", annonce.idAnnonce);
             }
 
             currentRoutePolyline = new google.maps.Polyline({
@@ -241,8 +241,31 @@ function cancelBooking(button) {
         .then(response => response.json())
         .then(result => {
             alert(result.message);
-            // Refresh the page to update button states
-            location.reload();
+            // EXAMPLE: revert UI from "Booked" to "Book"
+            const card = document.querySelector('.ride.card[data-annonce-id="'+ annonceId +'"]');
+            if (card) {
+                // 1) Re-enable the Book button
+                const bookBtn = card.querySelector('.btn-success[disabled]');
+                if (bookBtn) {
+                    bookBtn.removeAttribute('disabled');
+                    bookBtn.innerText = 'Book';
+                    bookBtn.setAttribute('onclick', 'bookRide(this)');
+                }
+
+                // 2) Hide the Cancel Booking button
+                const cancelBtn = card.querySelector('.btn-danger');
+                if (cancelBtn) {
+                    cancelBtn.style.display = 'none';
+                }
+
+                // 3) Hide or remove the Chat button if needed
+                const chatBtn = card.querySelector('.btn-info');
+                if (chatBtn) {
+                    chatBtn.style.display = 'none';
+                }
+            }
+
+            // No page reload. The user sees the "New Notification" from the server.
         })
         .catch(error => {
             alert('Error cancelling booking');

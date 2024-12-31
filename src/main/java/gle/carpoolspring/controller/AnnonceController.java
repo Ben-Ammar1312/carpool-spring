@@ -165,8 +165,8 @@ public class AnnonceController {
 
 
         @GetMapping("edit_annonce/{id}")
-        public String showUpdateForm(@PathVariable("id") int id_annonce, Model model) {
-            Annonce annonce = annonceService.getAnnonceById(id_annonce);
+        public String showUpdateForm(@PathVariable("id") int idAnnonce, Model model) {
+            Annonce annonce = annonceService.getAnnonceById(idAnnonce);
             model.addAttribute("annonce", annonce);
             model.addAttribute("googleApiKey", googleApiKey);
             return "edit_annonce";
@@ -178,7 +178,7 @@ public class AnnonceController {
                 @ModelAttribute("annonce") Annonce annonce,
                 RedirectAttributes redirectAttributes
         ) {
-            annonce.setId_annonce(id);
+            annonce.setIdAnnonce(id);
             annonceService.updateAnnonce(annonce);
             return "redirect:/allAnnonces";
         }
@@ -192,7 +192,7 @@ public class AnnonceController {
         // Collect all suggestions from these annonces that are not approved or rejected
         Set<WaypointSuggestion> suggestions = new HashSet<>();
         for (Annonce annonce : driverAnnonces) {
-            List<WaypointSuggestion> annonceSuggestions = annonceService.getWaypointSuggestionsByAnnonce(annonce.getId_annonce());
+            List<WaypointSuggestion> annonceSuggestions = annonceService.getWaypointSuggestionsByAnnonce(annonce.getIdAnnonce());
             for (WaypointSuggestion s : annonceSuggestions) {
                 if (!s.isApprovedByDriver() && !s.isRejected()) {
                     suggestions.add(s);

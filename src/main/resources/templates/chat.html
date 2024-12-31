@@ -1,208 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>Chat Messages</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.6;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-      background-color: #f9f9f9;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f4f4f4;
-    }
-    .expandable {
-      cursor: pointer;
-      color: #007bff;
-      text-decoration: underline;
-      background: none;
-      border: none;
-      font-size: 14px;
-    }
-    .conversation-details {
-      display: none;
-      margin-top: 10px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      background-color: #fff;
-      border-radius: 5px;
-    }
-    .message {
-      margin-bottom: 10px;
-    }
-    .sender {
-      font-weight: bold;
-    }
-    textarea {
-      width: 100%;
-      height: 80px;
-      margin-top: 10px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 5px 15px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
-
-  <script>
-    // Function to toggle visibility of one conversation at a time
-    function toggleConversation(button) {
-      // Hide all conversation details
-      const allDetails = document.querySelectorAll(".conversation-details");
-      allDetails.forEach(detail => detail.style.display = "none");
-
-      // Show the selected conversation's details
-      const id = button.getAttribute("data-idx");
-      const details = document.getElementById('details-' + id);
-      details.style.display = "block";
-
-      // Update URL query parameter to preserve state
-      const url = new URL(window.location);
-      url.searchParams.set('expanded', id);
-      history.pushState({}, '', url);
-    }
-
-    // Function to restore the expanded conversation on page load
-    window.onload = () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const expandedId = urlParams.get('expanded');
-      if (expandedId) {
-        const details = document.getElementById('details-' + expandedId);
-        if (details) {
-          details.style.display = "block";
-        }
-      }
-    };
-  </script>
-
-  <script>
-    function sendPartnerId(button) {
-      const partnerId = button.getAttribute("data-partner-id");
-      console.log("Sending Partner ID:", partnerId); // For debugging
-
-      fetch("http://127.0.0.1:8080/chat/view", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ partnerId }),
-      })
-              .then(response => {
-                console.log("Response status:", response.status); // Log response status
-                if (response.ok) {
-                  console.log("Partner ID sent successfully.");
-                } else {
-                  return response.text().then(text => {
-                    console.error("Failed to send Partner ID. Response Text:", text); // Log response text
-                  });
-                }
-              })
-              .catch(error => console.error("Error:", error));
-    }
-
-
-  </script>
-
+    <meta charset="UTF-8">
+    <title>Chat with Driver</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <!-- JavaScript for WebSocket -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <!-- Link to chat.js -->
+    <script th:src="@{/js/chat.js}" defer></script>
 </head>
 <body>
-<!-- Header -->
-
-<header>
-  <a>
-    <div>Carpool</div>
-  </a>
-
-  <nav>
-    <a href="#" th:href="@{/chat}" class="message-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 0 0 1-2-2V4z"/>
-        <path d="M.05 4.555L8 9.691l7.95-5.136A2 2 0 0 0 14 4H2a2 0 0 0-1.95.555z"/>
-      </svg>
-      <span class="badge" th:text="${unreadMessages}"></span>
-    </a>
-    <a href="#" th:href="@{/logout}">Logout</a>
-    <a href="#" th:href="@{/profile}">Profile</a>
-  </nav>
+<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Carpool</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <!-- Navbar Chat Button -->
+                <li class="nav-item">
+                    <a href="#" th:href="@{/chat}" class="message-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                             class="bi bi-envelope" viewBox="0 0 16 16">
+                            <path
+                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4z"/>
+                            <path
+                                    d="M.05 4.555L8 9.691l7.95-5.136A2 2 0 0 0 14 4H2a2 2 0 0 0-1.95.555z"/>
+                        </svg>
+                        <span class="badge bg-danger" th:text="${unreadMessages}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
+            </ul>
+        </div>
+    </div>
 </header>
-
-<h1>Your Conversations</h1>
-<table>
-  <thead>
-  <tr>
-    <th>Conversation Partner</th>
-    <th>Last Message</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="conversation, idx : ${conversations}">
-    <td th:text="${conversation.key}"></td>
-    <td th:class="${(conversation.value[conversation.value.size() - 1].isRead == false && conversation.value[conversation.value.size() - 1].sender.idUser != #authentication.principal.idUser) ? 'unread-message' : ''}"
-        th:text="${conversation.value[conversation.value.size() - 1].content_message}"></td>
-    <td>
-      <button class="expandable"
-              th:attr="data-idx=${idx}, data-partner-id=${conversation.value[0].receiver.idUser == #authentication.principal.idUser ? conversation.value[0].sender.idUser : conversation.value[0].receiver.idUser}"
-              onclick="toggleConversation(this); sendPartnerId(this)">
-        View Conversation
-      </button>
-    </td>
-  </tr>
-  </tbody>
-
-
-</table>
-
-<div th:each="conversation, idx : ${conversations}" th:id="'details-' + ${idx}" class="conversation-details">
-  <h2 th:text="'Conversation with ' + ${conversation.key}"></h2>
-  <div th:each="message : ${conversation.value}">
-    <p class="message">
-      <span class="sender" th:text="${message.sender.idUser == #authentication.principal.idUser ? 'You' : message.sender.prenom + ' ' + message.sender.nom}"></span>:
-      <span th:text="${message.content_message}"></span>
-    </p>
-  </div>
-  <form th:action="@{/chat/send}" method="post">
-    <input type="hidden" name="receiverId"
-           th:value="${conversation.value[0].receiver.idUser == #authentication.principal.idUser ? conversation.value[0].sender.idUser : conversation.value[0].receiver.idUser}" />
-    <textarea name="content" placeholder="Type your message..." required></textarea>
-    <button type="submit">Send</button>
-  </form>
-</div>
-
-<!-- Footer -->
+<section class="container mt-4">
+    <h2>Chat with Driver</h2>
+    <div class="card">
+        <div class="card-header">
+            <strong th:text="${passenger.nom + ' ' + passenger.prenom}"></strong> - Ride from
+            <span th:text="${ride.lieuDepart}"></span> to <span th:text="${ride.lieuArrivee}"></span>
+        </div>
+        <div class="card-body" id="messages" style="height: 400px; overflow-y: scroll;">
+            <!-- Messages will be appended here by JavaScript -->
+        </div>
+        <div class="card-footer">
+            <form id="chat-form">
+                <div class="input-group">
+                    <input type="text" id="message-input" class="form-control" placeholder="Type your message..." required>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 <footer class="bg-dark text-white text-center py-3">
-  <div class="container">
-    <p>Contact Us | Privacy Policy | Terms of Service</p>
-    <a href="#" class="text-white me-3">Facebook</a>
-    <a href="#" class="text-white me-3">Twitter</a>
-    <a href="#" class="text-white">Instagram</a>
-  </div>
+    <div class="container">
+        <p>Contact Us | Privacy Policy | Terms of Service</p>
+        <a href="#" class="text-white me-3">Facebook</a>
+        <a href="#" class="text-white me-3">Twitter</a>
+        <a href="#" class="text-white">Instagram</a>
+    </div>
 </footer>
-
-<!-- Bootstrap JS (for potential functionality like dropdowns, modals, etc.) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- Inline script to define JavaScript variables -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var userId = [[${currentUser.idUser}]];
+    var rideId = [[${ride.idAnnonce}]];
+    var chatId = [[${chatId}]];
+    var receiverId = [[${currentUser.idUser} == ${ride.conducteur.idUser} ? ${passenger.idUser} : ${ride.conducteur.idUser}]];    console.log("User ID:", userId);
+    var receiverName = [[${currentUser.idUser} == ${ride.conducteur.idUser} ? ${passenger.nom + ' ' + passenger.prenom} : ${ride.conducteur.nom + ' ' + ride.conducteur.prenom}]];
+    console.log("receiver name : ", receiverName)
+    console.log("Ride ID:", rideId);
+    console.log("Chat ID:", chatId);
+    console.log("Receiver ID:", receiverId);
+    /*]]>*/
+</script>
 </body>
 </html>

@@ -24,14 +24,14 @@ public class ReservationService {
     public Set<Integer> getBookedAnnonceIdsByUser(int userId) {
         List<Reservation> reservations = reservationRepository.findByPassager_IdUserAndEtat(userId, Etat.VALIDE);
         return reservations.stream()
-                .map(reservation -> reservation.getAnnonce().getId_annonce())
+                .map(reservation -> reservation.getAnnonce().getIdAnnonce())
                 .collect(Collectors.toSet());
     }
 
     public Set<Integer> getPendingAnnonceIdsByUser(int userId) {
         List<Reservation> reservations = reservationRepository.findByPassager_IdUserAndEtat(userId, Etat.EN_ATTENTE);
         return reservations.stream()
-                .map(reservation -> reservation.getAnnonce().getId_annonce())
+                .map(reservation -> reservation.getAnnonce().getIdAnnonce())
                 .collect(Collectors.toSet());
     }
 

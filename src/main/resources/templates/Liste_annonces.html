@@ -41,18 +41,18 @@
     <div class="row">
         <div class="col-md-4 ride-list">
         <h2>My Rides</h2>
-        <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.id_annonce}">
+        <div th:each="annonce : ${annonces}" class="ride card mb-3" th:attr="data-annonce-id=${annonce.idAnnonce}">
             <div class="card-body">
             <h5 class="card-title">From:  <span th:text="${annonce.lieuDepart}"></span> To: <span th:text="${annonce.lieuArrivee}"></span></h5>
             <p class="card-text"><strong>Date:</strong> <span th:text="${annonce.dateDepart}"></span></p>
             <p class="card-text"><strong>Seats Available:</strong> <span th:text="${annonce.nbrPlaces}"></span></p>
             <p class="card-text"><strong>Price per Passenger:</strong> $<span th:text="${annonce.prix}"></span></p>
               <div class="d-flex gap-2 mt-3">
-                  <button type="button"  class="btn btn-primary" onclick="showRoute(this)" th:attr="data-annonce-id=${annonce.id_annonce}"><i class="bi bi-trash">Show Route</i></button>
-                  <form th:action="@{'/edit_annonce/'+${annonce.id_annonce}}" method="get">
+                  <button type="button"  class="btn btn-primary" onclick="showRoute(this)" th:attr="data-annonce-id=${annonce.idAnnonce}"><i class="bi bi-trash">Show Route</i></button>
+                  <form th:action="@{'/edit_annonce/'+${annonce.idAnnonce}}" method="get">
                       <button type="submit"  class="btn btn-danger" > <i class="bi bi-trash">Edit</i> </button>
                   </form>
-                <form th:action="@{'/deleteAnnonce/' + ${annonce.id_annonce}}" method="post">
+                <form th:action="@{'/deleteAnnonce/' + ${annonce.idAnnonce}}" method="post">
                     <button type="submit"  class="btn btn-danger" onclick="return confirm('are you sure you want to delete this ride ?')"><i class="bi bi-trash">Delete</i></button>
                 </form>
 

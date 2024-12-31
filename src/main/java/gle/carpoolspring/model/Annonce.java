@@ -18,12 +18,12 @@ import java.util.Set;
 @Getter
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id_annonce")
+        property = "idAnnonce")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Annonce {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private int id_annonce;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idAnnonce;
     private LocalDate dateDepart;
     @DecimalMin(value = "0.0")
     private Float prix;

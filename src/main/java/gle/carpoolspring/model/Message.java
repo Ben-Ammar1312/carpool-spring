@@ -1,30 +1,57 @@
 package gle.carpoolspring.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Message {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private int id_message;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Changed strategy for better compatibility
+    private int idMessage;
 
-    private String date_message;
-    public String content_message;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
 
-    @ManyToOne
-    @JoinColumn(name = "id_sender", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private User receiver;
+
+    private String content;
+
+    private LocalDateTime timestamp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_id")
     @JsonBackReference
-    private User sender; // Sender user
+    private Chat chat;
 
-    @ManyToOne
-    @JoinColumn(name = "id_receiver", nullable = false)
-    private User receiver; // Receiver user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ride_id")
+    @JsonIgnore
+    private Annonce annonce;
+    @Column(name = "is_read", nullable = false)
+    private boolean isRead;
+    // Constructors
+    public Message() {
+    }
 
-    // New attribute to indicate if the message is read or not, with a default value of false
-    private boolean isRead = false;
+    public Message(User sender, User receiver, String content, LocalDateTime timestamp, Chat chat, Annonce ride) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.content = content;
+        this.timestamp = timestamp;
+        this.chat = chat;
+        this.annonce = ride;
+    }
 }

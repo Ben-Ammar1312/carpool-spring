@@ -35,7 +35,7 @@ public class Reservation {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_annonce", nullable = false)
+    @JoinColumn(name = "idAnnonce", nullable = false)
     @JsonBackReference
     private gle.carpoolspring.model.Annonce annonce;
 
