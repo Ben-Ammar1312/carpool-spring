@@ -1,5 +1,6 @@
 package gle.carpoolspring.model;
 
+import gle.carpoolspring.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,9 @@ public class Reclamation {
     private String sujet;
     private String titre;
     private String reponse;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 
     @ManyToOne
