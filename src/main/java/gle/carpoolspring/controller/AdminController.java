@@ -1,6 +1,8 @@
 package gle.carpoolspring.controller;
 
+import gle.carpoolspring.model.Annonce;
 import gle.carpoolspring.model.User;
+import gle.carpoolspring.repository.AnnonceRepository;
 import gle.carpoolspring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -18,6 +21,9 @@ public class AdminController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AnnonceRepository annonceRepository;
 
     @GetMapping("/dashboard")
     public String adminDashboard() {
@@ -56,6 +62,24 @@ public class AdminController {
         userRepository.save(user);
         return "redirect:/admin/manage-users";
     }
+
+    // Endpoint to display all announcements
+    @GetMapping("/manage-announcements")
+    public String manageAnnouncements(Model model) {
+        List<Annonce> annonces = annonceRepository.findAll();
+        model.addAttribute("annonces", annonces);
+        return "manage-announcements";
+    }
+
+    // Endpoint to handle deletion of an announcement
+    @PostMapping("/delete-announcement")
+    public String deleteAnnouncement(@RequestParam("id_annonce") int idAnnonce) {
+        Optional<Annonce> annonce = annonceRepository.findById(idAnnonce);
+        annonce.ifPresent(value -> annonceRepository.delete(value));
+        return "redirect:/admin/manage-announcements";
+    }
+
+
 
 
 
