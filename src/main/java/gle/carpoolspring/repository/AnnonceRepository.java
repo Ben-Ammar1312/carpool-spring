@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
     //  List<Annonce> findByConducteur_IdUser(int idUser);
@@ -32,4 +33,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
                               @Param("maxPrice") Float maxPrice);
 
 
+
+    Optional<Annonce> findById(Integer idAnnonce);
 }
