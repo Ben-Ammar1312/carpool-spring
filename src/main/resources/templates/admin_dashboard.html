@@ -5,8 +5,7 @@
   <title>Admin Dashboard</title>
   <link rel="stylesheet" th:href="@{/css/styles.css}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <!-- JavaScript for WebSocket -->
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
@@ -14,6 +13,7 @@
   <script th:src="@{/js/chat.js}" defer></script>
 </head>
 <body>
+
 <!-- Header -->
 <header class="header">
   <h1>Admin Dashboard</h1>
@@ -24,7 +24,7 @@
   <!-- Sidebar -->
   <nav class="sidebar">
     <ul>
-      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="/admin/dashboard" class="active">Dashboard</a></li>
       <li><a href="/admin/manage-users">Manage Users</a></li>
       <li><a href="/admin/manage-refund">Manage Refund</a></li>
       <li><a href="/admin/manage-announcements">Manage Announcements</a></li>
@@ -44,5 +44,6 @@
 <footer class="footer">
   <p>&copy; 2024 Your Company. All rights reserved.</p>
 </footer>
+
 </body>
 </html>

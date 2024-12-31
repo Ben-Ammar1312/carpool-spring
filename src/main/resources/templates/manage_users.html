@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Users</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <!-- JavaScript for WebSocket -->
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <!-- Link to chat.js -->
+  <script th:src="@{/js/chat.js}" defer></script>
+  <style>
+
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+  <h1>Admin - Manage Users</h1>
+</header>
+
+<!-- Sidebar -->
+<div class="container">
+  <nav class="sidebar">
+    <ul>
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="/admin/manage-users" class="active">Manage Users</a></li>
+      <li><a href="/admin/manage-refund">Manage Refund</a></li>
+      <li><a href="/admin/manage-announcements">Manage Announcements</a></li>
+      <li><a href="/admin/manage-complaints">Manage Complaints</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Content -->
+  <main class="content">
+    <h2>All Users</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Téléphone</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user : ${users}">
+        <form th:action="@{/admin/update-user}" method="post">
+          <td>
+            <input type="hidden" name="id" th:value="${user.idUser}">
+            <span th:text="${user.idUser}"></span>
+          </td>
+          <td>
+            <input type="text" name="email" th:value="${user.email}" style="width: 100%; padding: 5px;">
+          </td>
+          <td>
+            <input type="text" name="nom" th:value="${user.nom}" style="width: 100%; padding: 5px;">
+          </td>
+          <td>
+            <input type="text" name="prenom" th:value="${user.prenom}" style="width: 100%; padding: 5px;">
+          </td>
+          <td>
+            <input type="text" name="telephone" th:value="${user.telephone}" style="width: 100%; padding: 5px;">
+          </td>
+          <td>
+            <button type="submit" style="padding: 5px 10px;">Update</button>
+          </td>
+        </form>
+        <td>
+          <form th:action="@{/admin/delete-user}" method="post" style="margin: 0;">
+            <input type="hidden" name="id" th:value="${user.idUser}">
+            <button type="submit" style="padding: 5px 10px; background-color: red; color: white;">Delete</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </main>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>&copy; 2024 Your Company. All rights reserved.</p>
+</footer>
+</body>
+</html>
