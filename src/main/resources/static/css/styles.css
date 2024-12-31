@@ -414,3 +414,86 @@ button {
 .message {
     margin-bottom: 10px;
 }
+
+
+/* Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: auto;
+    position: relative;
+}
+
+/* Container */
+.container {
+    display: flex;
+    margin-top: 60px; /* Adjust for fixed header */
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #f4f4f4;
+    width: 200px;
+    height: calc(100vh - 60px); /* Adjust for fixed header */
+    position: fixed;
+    top: 60px;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 20px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.sidebar ul li a:hover {
+    background-color: #ddd;
+}
+
+/* Content */
+.content {
+    margin-left: 200px; /* Adjust for sidebar width */
+    padding: 20px;
+    width: 100%;
+}
