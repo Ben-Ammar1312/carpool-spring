@@ -24,27 +24,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Disable CSRF for simplicity; consider enabling it in production
                 .csrf(csrf -> csrf.disable())
-                // Configure authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws/**","/register","/verify-sms","/verify", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/ws/**", "/register", "/verify-sms", "/verify", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                // Configure form login
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/search", true)
+                        .successHandler((request, response, authentication) -> {
+                            var authorities = authentication.getAuthorities();
+                            if (authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+                                response.sendRedirect("/admin/dashboard");
+                            } else {
+                                response.sendRedirect("/search");
+                            }
+                        })
                         .permitAll()
                 )
-                // Configure logout
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                ).httpBasic();
+                )
+                .httpBasic();
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
