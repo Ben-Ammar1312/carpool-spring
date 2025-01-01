@@ -28,9 +28,30 @@ public class AdminController {
     private AnnonceRepository annonceRepository;
 
     @GetMapping("/dashboard")
-    public String adminDashboard() {
+    public String adminDashboard(Model model) {
+        // Fetch data for reclamation statistics
+        long openReclamations = reclamationRepository.countByStatus(Status.Open);
+        long cancelledReclamations = reclamationRepository.countByStatus(Status.Cancelled);
+        long resolvedReclamations = reclamationRepository.countByStatus(Status.Full);
+
+        // Fetch data for user statistics
+        long totalUsers = userRepository.count();
+        long activeUsers = userRepository.countByEnabled(true);
+
+        // Fetch data for announcements
+        long activeAnnouncements = annonceRepository.countByStatus(Status.Open);
+
+        // Add data to the model
+        model.addAttribute("openReclamations", openReclamations);
+        model.addAttribute("cancelledReclamations", cancelledReclamations);
+        model.addAttribute("resolvedReclamations", resolvedReclamations);
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("activeUsers", activeUsers);
+        model.addAttribute("activeAnnouncements", activeAnnouncements);
+
         return "admin_dashboard";
     }
+
 
     // Display Manage Users page
     @GetMapping("/manage-users")

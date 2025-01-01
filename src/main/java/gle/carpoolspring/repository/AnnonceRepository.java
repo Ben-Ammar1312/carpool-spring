@@ -1,6 +1,7 @@
 package gle.carpoolspring.repository;
 
 
+import gle.carpoolspring.enums.Status;
 import gle.carpoolspring.model.Annonce;
 import gle.carpoolspring.model.Conducteur;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -35,4 +36,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Integer> {
 
 
     Optional<Annonce> findById(Integer idAnnonce);
+
+    long countByStatus(Status status);
 }
