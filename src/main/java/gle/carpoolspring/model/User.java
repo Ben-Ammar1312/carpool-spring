@@ -21,23 +21,30 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Table( name = "user",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "email")
+        }
+)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "idUser")
-public  class User implements UserDetails , Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class User {
+
+    // Example using `int` for ID; change to Long if you prefer
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUser;
-    @NotBlank(message = "Nom (Last Name) is required.")
+
+    // If your JWT flow uses `username` for login, keep it. Otherwise optional.
+    private String username;
+
+    // Carpool fields (sample)
+    @NotBlank(message = "Nom is required.")
     private String nom;
 
-    @NotBlank(message = "Prénom (First Name) is required.")
+    @NotBlank(message = "Prénom is required.")
     private String prenom;
 
     private String telephone;
@@ -49,39 +56,43 @@ public  class User implements UserDetails , Serializable {
 
     @NotBlank(message = "Password is required.")
     private String password;
+
     @Transient
     private String confirmPassword;
+
     private String adresse;
+
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
+    // File upload (transient/not stored in DB)
     @Transient
     private MultipartFile photoFile;
-
     private String photo;
     private String cin;
     private Float note;
+
+    // Verification flags
     private boolean emailVerified = false;
     private boolean smsVerified = false;
     private boolean enabled = false;
     private boolean accountNonLocked = true;
     private boolean accountNonExpired = true;
     private boolean credentialsNonExpired = true;
+
     @Transient
     @AssertTrue(message = "You must agree to the terms.")
     private Boolean agreeTerms;
 
-
+    // Example relationships
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> sentMessages = new HashSet<>();
-
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> receivedMessages = new HashSet<>();
 
-
     @OneToMany(mappedBy = "user")
-    private List<gle.carpoolspring.model.Reclamation> reclamations;
+    private List<Reclamation> reclamations;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -89,51 +100,30 @@ public  class User implements UserDetails , Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @ManyToMany(mappedBy = "participants")
     @JsonIgnore
     private Set<Chat> chats;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+    // Constructors
+    public User() {
     }
 
-    @Override
-    public String getUsername() {
-        return email;
+    // Convenience constructor if your JWT signup uses something like:
+    // new User(username, email, password);
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
+    // equals & hashCode on idUser (or id) so each user is unique by DB identity
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-        return Objects.equals(idUser, user.idUser);
+        if (!(o instanceof User that)) return false;
+        return this.idUser == that.idUser;
     }
 
     @Override

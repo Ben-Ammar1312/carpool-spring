@@ -155,9 +155,9 @@ function bookRide(button) {
         var isOnRoute = google.maps.geometry.poly.isLocationOnEdge(pickupLatLng, currentRoutePolyline, 1e-4); // Tolerance in degrees (~11 meters)
 
         if (isOnRoute) {
-            alert("Pickup point is on the route. Proceeding with booking.");
-            sendBookingRequest(pickupLatLng, currentAnnonceId, true);
+            showPaymentMethodModal(pickupLatLng, currentAnnonceId, true);
         } else {
+
             // Calculate tolerance for 2km
             var toleranceInMeters = 2000; // 2km
             var metersPerDegree = 111320; // Approximate value for latitude degrees
@@ -167,8 +167,13 @@ function bookRide(button) {
             var isNearRoute = google.maps.geometry.poly.isLocationOnEdge(pickupLatLng, currentRoutePolyline, toleranceInDegrees);
 
             if (isNearRoute) {
-                alert("Pickup point is within 2km of the route. Sending request to the driver for approval.");
-                sendBookingRequest(pickupLatLng, currentAnnonceId, false);
+                let paymentChoice = confirm("Pickup is within 2km. Do you want to PAY ONLINE? (OK = Online, Cancel = Cash)");
+
+                if (paymentChoice) {
+                    sendBookingRequest(pickupLatLng, currentAnnonceId, false, "ONLINE");
+                } else {
+                    sendBookingRequest(pickupLatLng, currentAnnonceId, false, "CASH");
+                }
             } else {
                 alert("Pickup point is too far from the route. Please select a point closer to the route.");
             }
@@ -185,13 +190,14 @@ function bookRide(button) {
     });
 }
 
-function sendBookingRequest(pickupLatLng, annonceId, isOnRoute) {
+function sendBookingRequest(pickupLatLng, annonceId, isOnRoute, paymentMethod) {
     // Prepare data
     var data = {
         annonceId: annonceId,
         pickupLat: pickupLatLng.lat(),
         pickupLng: pickupLatLng.lng(),
-        onRoute: isOnRoute
+        onRoute: isOnRoute,
+        paymentMethod: paymentMethod
     };
 
     // Send AJAX request to server
@@ -205,6 +211,17 @@ function sendBookingRequest(pickupLatLng, annonceId, isOnRoute) {
     })
         .then(response => response.json())
         .then(result => {
+            // If paymentMethod = "ONLINE" and the server responded with something like
+            // { redirectUrl: "/payment" }, we can redirect automatically:
+            if (result.redirectUrl) {
+                const annonce = annoncesData.find(a => a.idAnnonce == annonceId);
+                const price = annonce ? annonce.prix : 0; // fallback if not found
+                const finalUrl = result.redirectUrl + "&price=" + encodeURIComponent(price);
+
+                // 3) Go to the new URL
+                window.location.href = finalUrl;
+                return;
+            }
             alert(result.message);
             // Check if onRoute was false, meaning we are waiting for driver approval
             if (!data.onRoute) {
@@ -271,4 +288,34 @@ function cancelBooking(button) {
             alert('Error cancelling booking');
             console.error(error);
         });
+}
+function showPaymentMethodModal(pickupLatLng, annonceId, isOnRoute) {
+    // 1) Get the modal element
+    const modalEl = document.getElementById('paymentMethodModal');
+
+    // 2) Create a new Bootstrap 5 Modal instance for it
+    const modal = new bootstrap.Modal(modalEl);
+
+    // 3) Get references to the buttons
+    const btnPayCash = document.getElementById('btnPayCash');
+    const btnPayOnline = document.getElementById('btnPayOnline');
+
+    // 4) Clear any old event listeners (just in case)
+    btnPayCash.onclick = null;
+    btnPayOnline.onclick = null;
+
+    // 5) On "Pay Cash" click
+    btnPayCash.addEventListener("click", () => {
+        // The modal automatically closes if you used `data-bs-dismiss="modal"`
+        // but you can also manually hide it: modal.hide();
+        sendBookingRequest(pickupLatLng, annonceId, isOnRoute, "CASH");
+    });
+
+    // 6) On "Pay Online" click
+    btnPayOnline.addEventListener("click", () => {
+        sendBookingRequest(pickupLatLng, annonceId, isOnRoute, "ONLINE");
+    });
+
+    // 7) Finally, show the modal
+    modal.show();
 }

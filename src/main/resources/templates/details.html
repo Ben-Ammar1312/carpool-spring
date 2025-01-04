@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Rides</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var annoncesData =/*[[${annoncesJson}]]*/;
+        /*]]>*/
+        annoncesData = JSON.parse(annoncesData);
+    </script>
+    <script th:src="@{/js/myRides.js}"></script>
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places&callback=initMap'}" async defer></script>
+</head>
+<body>
+<div th:replace="fragments :: mainHeader"></div>
+
+<!-- Section Details -->
+<section class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="background-color: #f8f9fa;">
+                    <h3>Détails de l'annonce</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Date de départ :</strong> <span th:text="${annonce.dateDepart}"></span></p>
+                    <p><strong>Heure de départ :</strong> <span th:text="${annonce.heureDepart}"></span></p>
+                    <p><strong>Lieu de départ :</strong> <span th:text="${annonce.lieuDepart}"></span></p>
+                    <p><strong>Lieu d'arrivée :</strong> <span th:text="${annonce.lieuArrivee}"></span></p>
+                    <p><strong>Prix :</strong> <span th:text="${annonce.prix}"></span></p>
+                    <p><strong>Nombre de places :</strong> <span th:text="${annonce.nbrPlaces}"></span></p>
+                    <p><strong>Statut :</strong> <span th:text="${annonce.isCanceled ? 'Annulée' : 'Active'}"></span></p>
+                    <p><strong>Waypoints :</strong> <span th:text="${annonce.waypoints[0].getAddress()}"></span></p>
+                    <!-- Pour afficher la description d'un Waypoint -->
+                    <p><strong>Voiture :</strong> <span th:text="${annonce.voiture.getMatricule()}"></span> -
+                        <span th:text="${annonce.voiture.model}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3 mt-5">
+    <div class="container">
+        <p>Contact Us | Privacy Policy | Terms of Service</p>
+        <a href="#" class="text-white me-3">Facebook</a>
+        <a href="#" class="text-white me-3">Twitter</a>
+        <a href="#" class="text-white">Instagram</a>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/notifications/unread')
+            .then(response => response.json())
+            .then(notifications => {
+                const notificationList = document.getElementById('notification-list');
+                const notificationCount = document.getElementById('notification-count');
+
+                if (notifications.length > 0) {
+                    notificationCount.textContent = notifications.length;
+                    notificationCount.style.display = 'inline';
+
+                    notifications.forEach(notification => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<a href="/notifications/${notification.id}" class="unread">${notification.message}</a>`;
+                        notificationList.appendChild(li);
+                    });
+                } else {
+                    const noNotifications = document.createElement('li');
+                    noNotifications.textContent = 'Aucune nouvelle notification';
+                    notificationList.appendChild(noNotifications);
+                }
+            })
+            .catch(err => console.error('Erreur lors de la récupération des notifications :', err));
+    });
+
+    document.getElementById('notification-icon').addEventListener('click', () => {
+        const dropdown = document.getElementById('notification-dropdown');
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
+</script>
+
+</body>
+</html>

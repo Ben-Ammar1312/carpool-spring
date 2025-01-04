@@ -5,8 +5,17 @@ public class BookingRequest {
     private double pickupLat;
     private double pickupLng;
     private boolean onRoute;
+    private String paymentMethod;
 
     // Getters and setters
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 
     public int getAnnonceId() {
         return annonceId;

@@ -87,5 +87,10 @@ public class ChatWebSocketController {
 
         // Broadcast to all participants of the chat
         messagingTemplate.convertAndSend("/topic/chat/" + chatId, broadcastMessage);
+        int newUnreadCount = messageService.countUnreadMessagesForUser(receiverId);
+        messagingTemplate.convertAndSend(
+                "/topic/unreadCount/" + receiverId, // <-- The receiver's private channel
+                newUnreadCount
+        );
     }
 }

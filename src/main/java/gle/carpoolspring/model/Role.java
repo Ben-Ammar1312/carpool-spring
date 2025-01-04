@@ -5,13 +5,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "role")
 @Getter
 @Setter
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique = true, nullable = false)
-    private String name; // e.g., ROLE_USER, ROLE_ADMIN
+    @Column(unique = true, length = 50, nullable = false)
+    private String name;
+
+    public Role() {
+    }
+
+    public Role(String name) {
+        this.name = name;
+    }
 }

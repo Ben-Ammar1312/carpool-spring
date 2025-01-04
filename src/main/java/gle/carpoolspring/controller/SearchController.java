@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gle.carpoolspring.model.Annonce;
 import gle.carpoolspring.model.User;
 import gle.carpoolspring.service.AnnonceService;
+import gle.carpoolspring.service.MessageService;
 import gle.carpoolspring.service.ReservationService;
 import gle.carpoolspring.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,9 @@ public class SearchController {
 
     @Value("${google.api.key}")
     private String googleApiKey;
+
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping("/search")
     public String showSearchPage() {
@@ -76,6 +80,8 @@ public class SearchController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        int unreadMessagesCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        model.addAttribute("unreadMessages", unreadMessagesCount);
         model.addAttribute("bookedAnnonceIds", bookedAnnonceIds);
         model.addAttribute("pendingAnnonceIds", pendingAnnonceIds);
         model.addAttribute("annonces", annonces);

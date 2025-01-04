@@ -5,18 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import gle.carpoolspring.dto.AnnonceForm;
 import gle.carpoolspring.dto.WaypointForm;
-import gle.carpoolspring.model.Annonce;
-import gle.carpoolspring.model.Conducteur;
-import gle.carpoolspring.model.Waypoint;
-import gle.carpoolspring.model.WaypointSuggestion;
+import gle.carpoolspring.model.*;
 import gle.carpoolspring.repository.AnnonceRepository;
 import gle.carpoolspring.repository.ConducteurRepository;
 import gle.carpoolspring.service.AnnonceService;
+import gle.carpoolspring.service.MessageService;
 import gle.carpoolspring.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,8 @@ public class AnnonceController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private AnnonceService annonceService;
@@ -44,7 +45,11 @@ public class AnnonceController {
     private String googleApiKey;
 
     @GetMapping("/annonces/post-ride")
-    public String postRidePage(Model model) {
+    public String postRidePage(Model model,Principal principal) {
+        User currentUser = userService.findByEmail(principal.getName());
+        int unreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        model.addAttribute("unreadMessages", unreadCount);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("annonceForm", new AnnonceForm());
         model.addAttribute("googleApiKey", googleApiKey);
         return "post-ride";
@@ -141,6 +146,9 @@ public class AnnonceController {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
+            int unreadCount = messageService.countUnreadMessagesForUser(currentConducteur.getIdUser());
+            model.addAttribute("unreadMessages", unreadCount);
+            model.addAttribute("currentUser", currentConducteur);
             model.addAttribute("googleApiKey", googleApiKey);
             model.addAttribute("annonces", myAnnonces);
             model.addAttribute("annoncesJson", annoncesJson);
@@ -165,8 +173,12 @@ public class AnnonceController {
 
 
         @GetMapping("edit_annonce/{id}")
-        public String showUpdateForm(@PathVariable("id") int idAnnonce, Model model) {
+        public String showUpdateForm(@PathVariable("id") int idAnnonce, Model model, Principal principal) {
             Annonce annonce = annonceService.getAnnonceById(idAnnonce);
+            User currentUser = userService.findByEmail(principal.getName());
+            int unreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+            model.addAttribute("unreadMessages", unreadCount);
+            model.addAttribute("currentUser", currentUser);
             model.addAttribute("annonce", annonce);
             model.addAttribute("googleApiKey", googleApiKey);
             return "edit_annonce";
@@ -199,7 +211,9 @@ public class AnnonceController {
                 }
             }
         }
-
+        int unreadCount = messageService.countUnreadMessagesForUser(driver.getIdUser());
+        model.addAttribute("unreadMessages", unreadCount);
+        model.addAttribute("currentUser", driver);
         model.addAttribute("suggestions", suggestions);
         return "manage-suggestions";
     }

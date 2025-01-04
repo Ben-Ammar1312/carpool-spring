@@ -3,6 +3,7 @@ package gle.carpoolspring.controller;
 
 import gle.carpoolspring.dto.BookingRequest;
 import gle.carpoolspring.dto.BookingResponse;
+import gle.carpoolspring.dto.ConfirmPaymentBookingRequest;
 import gle.carpoolspring.enums.Etat;
 import gle.carpoolspring.enums.Status;
 import gle.carpoolspring.model.*;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Slf4j
@@ -68,30 +70,46 @@ public class BookingController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new BookingResponse("Not enough seats available"));
             }
-
-            reservation.setEtat(Etat.VALIDE); // Automatically approved
-
-            // Save reservation
-            reservationService.save(reservation);
-            annonce.setNbrPlaces(annonce.getNbrPlaces()-requestedSeats);
-            if (annonce.getNbrPlaces() == 0) {
-                annonce.setStatus(Status.Full); // Assuming you have a status field
-            }
-            annonceService.saveAnnonce(annonce);
-
             // Create pickup point
             PickupPoint pickupPoint = new PickupPoint();
             pickupPoint.setLatitude(bookingRequest.getPickupLat());
             pickupPoint.setLongitude(bookingRequest.getPickupLng());
             pickupPoint.setAnnonce(annonce);
             pickPointService.save(pickupPoint);
-            // Save pickup point
-            // Assume you have a service to handle this
+            if ("CASH".equalsIgnoreCase(bookingRequest.getPaymentMethod())) {
+                reservation.setEtat(Etat.VALIDE); // Automatically approved
 
-            return ResponseEntity.ok(new BookingResponse("Booking confirmed"));
-        } else {
+                // Save reservation
 
-            reservation.setEtat(Etat.EN_ATTENTE);
+                reservationService.save(reservation);
+                annonce.setNbrPlaces(annonce.getNbrPlaces() - requestedSeats);
+                if (annonce.getNbrPlaces() == 0) {
+                    annonce.setStatus(Status.Full); // Assuming you have a status field
+                }
+                annonceService.saveAnnonce(annonce);
+
+
+                // Save pickup point
+                // Assume you have a service to handle this
+
+                return ResponseEntity.ok(new BookingResponse("Booking confirmed (Cash Payment)"));
+            } else {
+
+                reservation.setEtat(Etat.PAYMENT_PENDING);
+                reservationService.save(reservation);
+                Map<String, Object> response = new HashMap<>();
+                response.put("redirectUrl", "/payment?rideId=" + annonce.getIdAnnonce() + "&reservationId=" + reservation.getId_reservation());
+                response.put("message", "Proceed to online payment to confirm your booking");
+                return ResponseEntity.ok(response);
+            }
+        }else{
+            if ("CASH".equalsIgnoreCase(bookingRequest.getPaymentMethod())) {
+                reservation.setEtat(Etat.EN_ATTENTE);
+            } else {
+                reservation.setEtat(Etat.PAYMENT_PENDING);
+            }
+
+
             // Create a WaypointSuggestion
             WaypointSuggestion suggestion = new WaypointSuggestion();
             suggestion.setLatitude(bookingRequest.getPickupLat());
@@ -190,6 +208,55 @@ public class BookingController {
 
         return ResponseEntity.ok(new BookingResponse("Booking cancelled successfully"));
     }
+
+    @PostMapping("/confirmPayment")
+    public ResponseEntity<?> confirmPayment(@RequestBody ConfirmPaymentBookingRequest request, Principal principal) {
+        // 1) Validate reservation
+        Reservation reservation = reservationService.findById(request.getReservationId());
+        if (reservation == null) {
+            return ResponseEntity.badRequest().body("Reservation not found");
+        }
+
+        // 2) Validate user ownership (optional check)
+        User currentUser = userService.findByEmail(principal.getName());
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body("User not authenticated");
+        }
+        // e.g. if you need to check that currentUser is indeed the passenger
+        // if (reservation.getPassager().getIdUser() != currentUser.getIdUser()) {
+        //    return ResponseEntity.status(403).body("Not your reservation");
+        // }
+
+        // 3) Optionally verify PaymentIntent status from Stripe:
+        // PaymentIntent pi = paymentService.retrievePaymentIntent(request.getPaymentIntentId());
+        // if (!"succeeded".equalsIgnoreCase(pi.getStatus())) {
+        //     return ResponseEntity.badRequest().body("Payment not completed");
+        // }
+
+        // 4) Finalize booking
+        reservation.setEtat(Etat.VALIDE);
+        reservationService.save(reservation);
+
+        // 5) Decrement seats in the annonce
+        Annonce annonce = reservation.getAnnonce();
+        if (annonce == null) {
+            return ResponseEntity.badRequest().body("Annonce not found for this reservation");
+        }
+
+        annonce.setNbrPlaces(annonce.getNbrPlaces() - reservation.getNbrPlaces());
+        if (annonce.getNbrPlaces() <= 0) {
+            annonce.setStatus(Status.Full);
+        }
+        annonceService.saveAnnonce(annonce);
+
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Booking confirmed after online payment");
+        response.put("redirectUrl", "/search");  // or "/search/results"
+
+        return ResponseEntity.ok(response);
+    }
+
 }
 
 

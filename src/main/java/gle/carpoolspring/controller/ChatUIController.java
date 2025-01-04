@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,11 @@ public class ChatUIController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private MessageService messageService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     private static final Logger logger = LoggerFactory.getLogger(ChatUIController.class);
 
@@ -55,6 +61,8 @@ public class ChatUIController {
             Passager passenger = (Passager) currentUser;
             model.addAttribute("currentUser", passenger);
         }
+        int unreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        model.addAttribute("unreadMessages", unreadCount);
         model.addAttribute("chats", chats);
         // Optionally, add unread messages count
         return "general-chat"; // Ensure you have 'general-chat.html'
@@ -81,7 +89,12 @@ public class ChatUIController {
         User currentUser = userService.findByEmail(principal.getName());
 
 
+
         Chat chat = chatService.getOrCreateChat(rideId, participant, driver);
+        messageService.markAllMessagesAsRead(chat.getId(), currentUser.getIdUser());
+        int newUnreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        messagingTemplate.convertAndSend("/topic/unreadCount/" + currentUser.getIdUser(), newUnreadCount);
+
         List<ChatMessage> messages = chatService.getChatMessages(chat.getId());
 
         // Determine the passenger based on the current user's role
@@ -93,7 +106,8 @@ public class ChatUIController {
             // Current user is the passenger; passenger is themselves
             passenger = currentUser;
         }
-
+        int unreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        model.addAttribute("unreadMessages", unreadCount);
         model.addAttribute("ride", annonce);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("passenger", passenger); // Ensure 'passenger' is always set

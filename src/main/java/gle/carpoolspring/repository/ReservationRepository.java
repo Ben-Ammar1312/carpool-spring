@@ -15,6 +15,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
     List<Reservation> findByPassagerId(@Param("userId") int userId);
 
 
+    @Query("SELECT r FROM Reservation r WHERE r.id_reservation = :id")
+    Reservation findByIdReservation(@Param("id") int id);
+
     @Query("SELECT r FROM Reservation r WHERE r.annonce.idAnnonce = :annonceId AND r.passager.idUser = :passagerId")
     Reservation findByAnnonceIdAndPassagerId(@Param("annonceId") int annonceId, @Param("passagerId") int passagerId);
     List<Reservation> findByPassager_IdUserAndEtat(int passagerId, Etat etat);

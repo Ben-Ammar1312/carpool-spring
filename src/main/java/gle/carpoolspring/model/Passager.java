@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("PASSAGER")
 @Getter
 @Setter
 public class Passager extends User {

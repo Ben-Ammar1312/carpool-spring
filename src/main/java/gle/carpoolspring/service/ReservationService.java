@@ -47,6 +47,8 @@ public class ReservationService {
         reservationRepository.delete(reservation);
     }
 
+    public Reservation findById(int id) {return reservationRepository.findByIdReservation(id);}
+
 
     // Other methods as needed
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -55,6 +56,36 @@ public class MessageService {
      */
     public List<Message> getMessagesByRideId(int rideId) {
         return messageRepository.findByChat_IdOrderByTimestampAsc(rideId);
+    }
+    public int countUnreadMessagesForUser(int userId) {
+        return messageRepository.countByReceiver_IdUserAndIsReadFalse(userId);
+    }
+
+
+    public void markAsRead(int messageId) {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if (optionalMessage.isPresent()) {
+            Message message = optionalMessage.get();
+            message.setRead(true);
+            messageRepository.save(message);
+        }
+
+
+    }
+
+
+    public void markAllMessagesAsRead(int chatId, int userId) {
+        // We need a custom repository method:
+        List<Message> unreadMessages = messageRepository
+                .findByChat_IdAndReceiver_IdUserAndIsReadFalse(chatId, userId);
+
+        for (Message message : unreadMessages) {
+            message.setRead(true);
+        }
+
+        if (!unreadMessages.isEmpty()) {
+            messageRepository.saveAll(unreadMessages);
+        }
     }
 
     // Additional methods as needed

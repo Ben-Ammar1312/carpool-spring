@@ -16,6 +16,12 @@
     const notificationDTO = JSON.parse(message.body);
     handleIncomingNotification(notificationDTO);
 });
+        const unreadCountDestination = '/topic/unreadCount/' + currentUserId;
+        notificationStompClient.subscribe(unreadCountDestination, function (message) {
+            const newCount = JSON.parse(message.body);
+            updateUnreadMessagesBadge(newCount);
+        });
+
 }, function (error) {
     console.error('Notification STOMP error:', error);
 });
@@ -30,6 +36,17 @@
             let count = parseInt(badgeEl.innerText) || 0;
             badgeEl.innerText = count + 1;
         }}
+
+    function updateUnreadMessagesBadge(count) {
+        const unreadBadge = document.getElementById('unread-messages-badge');
+        if (unreadBadge) {
+            unreadBadge.textContent = count;
+            unreadBadge.style.display = count > 0 ? 'inline' : 'none';
+        }
+    }
+
+
+
 
     // Connect once the page loads
 

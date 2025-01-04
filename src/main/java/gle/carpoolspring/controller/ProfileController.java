@@ -1,6 +1,7 @@
 package gle.carpoolspring.controller;
 
 import gle.carpoolspring.model.User;
+import gle.carpoolspring.service.MessageService;
 import gle.carpoolspring.service.UserService;
 import gle.carpoolspring.service.StorageService;  // Make sure StorageService is injected
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,16 @@ public class ProfileController {
 
     @Autowired
     private StorageService storageService;  // Inject StorageService for file uploads
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping
     public String showProfile(ModelMap model, Principal principal) {
         User user = userService.findByEmail(principal.getName());
+        User currentUser = userService.findByEmail(principal.getName());
+        int unreadCount = messageService.countUnreadMessagesForUser(currentUser.getIdUser());
+        model.addAttribute("unreadMessages", unreadCount);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("user", user);
         return "profile";
     }

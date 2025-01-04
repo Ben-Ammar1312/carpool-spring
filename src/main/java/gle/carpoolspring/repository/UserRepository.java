@@ -9,13 +9,11 @@ import gle.carpoolspring.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByUsername(String username);
+    boolean existsByUsername(String username);
+
     Optional<User> findByEmail(String email);
     Optional<User> findByTelephone(String telephone);
-
-    @Override
-    Optional<User> findById(Integer integer);
-
     boolean existsByEmail(String email);
-
     long countByEnabled(boolean b);
 }

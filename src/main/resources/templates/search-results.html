@@ -27,39 +27,10 @@
     <script th:src="@{/js/myRides.js}"></script>
     <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${googleApiKey} + '&libraries=places,geometry&callback=initMap'}" async defer></script>
     <script th:src="@{/js/notifications.js}"></script>
+
 </head>
 <body>
-<header class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Carpool</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a href="#" th:href="@{/chat}" class="message-icon">
-                    <span class="badge" th:text="${unreadMessages}"></span>
-                </a></li>
-
-                    <a class="navbar-brand" href="#">Carpool</a>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Notifications <span id="notifications-badge" class="badge bg-danger">0</span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="notificationsDropdown" id="notifications-menu">
-                        <!-- We will dynamically fill this list with notifications. -->
-                        <!-- Example placeholder -->
-                        <!-- <li><a class="dropdown-item" href="#">No notifications yet</a></li> -->
-                    </ul>
-                </li>
-                        <!-- other nav items like chat, logout, etc. -->
-
-
-                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/profile}">Profile</a></li>
-            </ul>
-        </div>
-    </div>
-</header>
+<div th:replace="fragments :: mainHeader"></div>
 <section class="container-fluid">
     <div class="row">
         <!-- Ride List -->
@@ -168,7 +139,24 @@
         <a href="#" class="text-white">Instagram</a>
     </div>
 </footer>
-
+<!-- Payment Method Modal -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-labelledby="paymentMethodModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentMethodModalLabel">Select Payment Method</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please choose how you want to pay:</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnPayCash" class="btn btn-success" data-bs-dismiss="modal">Pay Cash</button>
+                <button type="button" id="btnPayOnline" class="btn btn-primary" data-bs-dismiss="modal">Pay Online</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

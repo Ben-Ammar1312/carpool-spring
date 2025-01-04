@@ -13,4 +13,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     List<Message> findByAnnonce_IdAnnonceOrderByTimestampAsc(int rideId);
     List<Message> findByChat_IdOrderByTimestampAsc(int chatId);
     List<Message> findByChatIdOrderByTimestampAsc(int chatId);
+    int countByReceiver_IdUserAndIsReadFalse(int receiverId);
+    List<Message> findByChat_IdAndReceiver_IdUserAndIsReadFalse(int chatId, int receiverId);
+
 }
