@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Messages</title>
+</head>
+<body>
+<h1>Messages</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="message : ${messages}">
+        <td th:text="${message.id}"></td>
+        <td th:text="${message.name}"></td>
+        <td th:text="${message.email}"></td>
+        <td th:text="${message.subject}"></td>
+        <td th:text="${message.status}"></td>
+        <td>
+            <a th:href="@{'/admin/messages/' + ${message.id}}">View</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

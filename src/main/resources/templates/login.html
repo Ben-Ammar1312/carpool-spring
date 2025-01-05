@@ -5,7 +5,7 @@
     <!-- Link Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container mt-5 d-flex justify-content-center align-items-center" style="height: 100vh;">
@@ -23,7 +23,7 @@
             <p th:text="${success}"></p>
         </div>
 
-        <form th:action="@{/login}" method="post">
+        <form id="login-form">
             <div class="form-group mb-3">
                 <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
             </div>
@@ -36,11 +36,40 @@
         <div class="text-center mt-3">
             <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
         </div>
+
+        <div id="login-error" class="alert alert-danger mt-3" style="display: none;"></div>
     </div>
 </div>
 
 <!-- Link Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+    $(document).ready(function() {
+        $('#login-form').on('submit', function(event) {
+            event.preventDefault();
+            var username = $('#username').val();
+            var password = $('#password').val();
+
+            $.ajax({
+                url: '/api/auth/signin',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: username, password: password }),
+                success: function(response) {
+                    // Redirect to /search upon successful login
+                    window.location.href = '/search';
+                },
+                error: function(xhr) {
+                    var errorMessage = 'Login failed. Please check your credentials.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    $('#login-error').text(errorMessage).show();
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

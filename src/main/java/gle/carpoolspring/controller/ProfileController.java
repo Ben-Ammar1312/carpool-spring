@@ -91,7 +91,8 @@ public class ProfileController {
     @PostMapping("/delete")
     public String deleteAccount(Principal principal, RedirectAttributes redirectAttributes) {
         String email = principal.getName();
-        userService.deleteAccount(email);
+        User user = userService.findByEmail(email);
+        userService.delete(user);
         redirectAttributes.addFlashAttribute("success", "Account deleted successfully.");
         return "redirect:/logout";
     }

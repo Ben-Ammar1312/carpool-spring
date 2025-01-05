@@ -10,15 +10,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Entity
 @Table( name = "user",
@@ -28,6 +24,10 @@ import java.util.stream.Collectors;
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "idUser")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Getter
 @Setter
 public class User {
@@ -37,8 +37,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUser;
 
-    // If your JWT flow uses `username` for login, keep it. Otherwise optional.
-    private String username;
 
     // Carpool fields (sample)
     @NotBlank(message = "Nom is required.")
@@ -112,8 +110,7 @@ public class User {
 
     // Convenience constructor if your JWT signup uses something like:
     // new User(username, email, password);
-    public User(String username, String email, String password) {
-        this.username = username;
+    public User( String email, String password) {
         this.email = email;
         this.password = password;
     }

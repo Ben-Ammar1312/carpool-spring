@@ -14,9 +14,6 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class WaypointSuggestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

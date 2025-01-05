@@ -20,7 +20,6 @@ public class UserDetailsImp implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private int id;                    // from user.getIdUser()
-    private String username;           // could store user.getUsername() or user.getEmail()
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -40,7 +39,6 @@ public class UserDetailsImp implements UserDetails {
 
         return new UserDetailsImp(
                 user.getIdUser(),               // int ID
-                user.getUsername(),             // or user.getEmail() if that is your principal
                 user.getEmail(),
                 user.getPassword(),
                 authorities,
@@ -62,9 +60,15 @@ public class UserDetailsImp implements UserDetails {
      * If you log in by email, return `email` as "getUsername()".
      * If you log in by username, return `username`.
      */
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
-        return username;  // or return email; based on your principal
+        return email;  // or return email; based on your principal
     }
 
     @Override

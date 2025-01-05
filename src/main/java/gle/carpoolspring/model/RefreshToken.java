@@ -8,14 +8,18 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@Entity(name = "refreshtoken")
+@Entity
+@Table(name = "refreshtoken", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "user_id", name = "UK81otwtvdhcw7y3ipoijtlb1g3")
+})
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "idUser")
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "idUser", nullable = false)
     private User user;
 
     @Column(nullable= false, unique = true)

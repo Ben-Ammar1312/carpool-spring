@@ -4,21 +4,15 @@ import com.fasterxml.jackson.annotation.*;
 import gle.carpoolspring.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Setter
 @Getter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "idAnnonce")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Annonce {
     @Id
@@ -44,24 +38,24 @@ public class Annonce {
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    @JsonManagedReference
+    @JsonManagedReference // Indicates this is the parent side
     private Conducteur conducteur;
 
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL , orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference // Indicates this is the parent side
     private Set<Reservation> reservations;
 
     @OneToMany(mappedBy = "annonce",cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference // Indicates this is the parent side
     private Set<WaypointSuggestion> waypointSuggestions;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL,orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference // Indicates this is the parent side
     private Set<Waypoint> waypoints;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference // Indicates this is the parent side
     private Set<PickupPoint> pickupPoints;
 
 }

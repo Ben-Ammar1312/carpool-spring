@@ -15,9 +15,6 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id_reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -36,7 +33,7 @@ public class Reservation {
 
     @ManyToOne
     @JoinColumn(name = "idAnnonce", nullable = false)
-    @JsonBackReference
+    @JsonBackReference // Indicates this is the child side
     private gle.carpoolspring.model.Annonce annonce;
 
     @OneToOne

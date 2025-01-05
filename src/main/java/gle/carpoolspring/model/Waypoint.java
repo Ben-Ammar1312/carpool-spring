@@ -19,7 +19,7 @@ public class Waypoint {
 
     @ManyToOne
     @JoinColumn(name="annonce_id")
-    @JsonBackReference
+    @JsonBackReference // Indicates this is the child side
     private Annonce annonce;
 
     @ManyToOne

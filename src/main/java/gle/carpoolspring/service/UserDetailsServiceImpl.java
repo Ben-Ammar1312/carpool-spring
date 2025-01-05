@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Try to find user by email, otherwise by username
         User user = userRepository.findByEmail(usernameOrEmail)
                 .orElseGet(() ->
-                        userRepository.findByUsername(usernameOrEmail)
+                        userRepository.findByEmail(usernameOrEmail)
                                 .orElseThrow(() ->
                                         new UsernameNotFoundException("User not found with email/username: " + usernameOrEmail)
                                 )

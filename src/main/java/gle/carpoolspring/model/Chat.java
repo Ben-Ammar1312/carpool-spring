@@ -2,6 +2,7 @@ package gle.carpoolspring.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -13,9 +14,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Chat {
 
@@ -25,6 +23,7 @@ public class Chat {
 
     @ManyToOne(fetch = FetchType.EAGER) // EAGER fetching to load 'annonce' with 'chat'
     @JoinColumn(name = "annonce_id", nullable = false) // Ensure this matches your DB schema
+    @JsonManagedReference
     private Annonce annonce;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -36,6 +35,7 @@ public class Chat {
     private Set<User> participants = new HashSet<>();
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Message> messages = new HashSet<>();
 
     // Methods to add/remove participants and messages

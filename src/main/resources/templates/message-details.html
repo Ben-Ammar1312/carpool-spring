@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Message Details</title>
+</head>
+<body>
+<h1>Message Details</h1>
+<p><strong>Name:</strong> <span th:text="${message.name}"></span></p>
+<p><strong>Email:</strong> <span th:text="${message.email}"></span></p>
+<p><strong>Subject:</strong> <span th:text="${message.subject}"></span></p>
+<p><strong>Message:</strong> <span th:text="${message.message}"></span></p>
+<p><strong>Status:</strong> <span th:text="${message.status}"></span></p>
+<p><strong>Response:</strong> <span th:text="${message.response ?: 'No response yet'}"></span></p>
+
+<form th:action="@{'/admin/messages/' + ${message.id} + '/respond'}" method="post">
+    <textarea name="response" placeholder="Write your response here"></textarea>
+    <button type="submit">Respond</button>
+</form>
+
+<form th:action="@{'/admin/messages/' + ${message.id} + '/mark-read'}" method="post">
+    <button type="submit">Mark as Read</button>
+</form>
+
+<a href="/admin/messages">Back to Messages</a>
+</body>
+</html>

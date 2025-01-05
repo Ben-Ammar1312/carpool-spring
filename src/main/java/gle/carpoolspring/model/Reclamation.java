@@ -1,5 +1,7 @@
 package gle.carpoolspring.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import gle.carpoolspring.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +10,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id_reclamation")
 public class Reclamation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
