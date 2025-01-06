@@ -2,9 +2,11 @@ package gle.carpoolspring.controller;
 
 import gle.carpoolspring.enums.Status;
 import gle.carpoolspring.model.Annonce;
+import gle.carpoolspring.model.Paiement;
 import gle.carpoolspring.model.Reclamation;
 import gle.carpoolspring.model.User;
 import gle.carpoolspring.repository.AnnonceRepository;
+import gle.carpoolspring.repository.PaiementRepository;
 import gle.carpoolspring.repository.ReclamationRepository;
 import gle.carpoolspring.repository.UserRepository;
 import gle.carpoolspring.service.ReclamationService;
@@ -21,6 +23,8 @@ import java.util.Optional;
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Autowired
+    private PaiementRepository paiementRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -178,7 +182,27 @@ public class AdminController {
     }
 
 
+    @GetMapping("/manage-payments")
+    public String managePayments(Model model) {
+        List<Paiement> paiements = paiementRepository.findAll();
+        model.addAttribute("paiements", paiements);
+        return "manage-payments";
+    }
 
+    @GetMapping("/manage-refund/{paymentIntentId}")
+    public String manageRefund(@PathVariable("paymentIntentId") String paymentIntentId, Model model, RedirectAttributes redirectAttributes) {
+        // Fetch the Paiement entity by paymentIntentId
+        Paiement paiement = paiementRepository.findByPaymentIntentId(paymentIntentId);
+        if (paiement == null) {
+            // Add an error message and redirect back to manage payments
+            redirectAttributes.addFlashAttribute("error", "Payment not found.");
+            return "redirect:/admin/manage-payments";
+        }
+
+        // Add the Paiement to the model
+        model.addAttribute("paiement", paiement);
+        return "manage-refund"; // Thymeleaf template name
+    }
 
 
 

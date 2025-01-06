@@ -38,6 +38,7 @@ public class Reservation {
 
     @OneToOne
     @JoinColumn(name = "id_paiement")
+    @JsonBackReference
     private gle.carpoolspring.model.Paiement paiement;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -6,14 +6,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
 public class Paiement {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_paiement;
-    private String date_paiement;
+    private LocalDateTime date_paiement;
     private Float montant;
 
     @Enumerated(EnumType.STRING)
@@ -22,6 +24,7 @@ public class Paiement {
     @Enumerated(EnumType.STRING)
     private Mode mode;
 
+    private String paymentIntentId;
     @OneToOne(mappedBy = "paiement")
     private Reservation reservation;
 

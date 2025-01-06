@@ -25,6 +25,13 @@
             </a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item"
+                        th:if="${currentUser instanceof T(gle.carpoolspring.model.Conducteur)}">
+                        <a class="nav-link" th:href="@{/annonces/post-ride}">
+                            Post A Ride
+                        </a>
+                    </li>
                     <li class="nav-item"
                         th:if="${currentUser instanceof T(gle.carpoolspring.model.Conducteur)}">
                         <a class="nav-link" th:href="@{/driver/suggestions}">
